@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: FB Comments Import - Free
+Plugin Name: FB Comments Importer - Free
 Plugin URI: http://projects.geekydump.com/
 Description: Import facebook comments to your wordpress site
-Version: 1.0
-Author: Ivan M
+Version: 1.0.1
+Author: Ivan M & steelmaiden
 */
 
 /*
@@ -38,7 +38,7 @@ function comimp_get_avatar_free($avatar, $id_or_email, $size='50') {
 
 
 function fbsync_comments_free_plugin_menu() {
-        add_menu_page(__('FB Comments Import','fbsync_comments_options_f'), __('FB Comments Import','fbsync_comments_options_f'), 'manage_options', 'fbsync_comments_free', 'fbsync_comments_plugin_options_f' );
+        add_menu_page(__('FB Comments Importer','fbsync_comments_options_f'), __('FB Comments Importer','fbsync_comments_options_f'), 'manage_options', 'fbsync_comments_free', 'fbsync_comments_plugin_options_f' );
 }
 
 // curl get content
