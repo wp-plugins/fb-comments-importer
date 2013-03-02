@@ -29,9 +29,8 @@ Since this is the first version, there are possibly some bugs so please open a s
 
 == Changelog ==
 
-- 1.0 - 
-The initial release
-- 1.0.1-
-Fixed bug with manual import giving fatal error on some server configs
+= 1.0 2013-03-01 =
+* New: Initial release
 
-== Upgrade notice ==
+= 1.0.1 2013-03-02 =
+* Fix: Manual import was giving some errors on some server configurations.
