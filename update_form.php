@@ -36,6 +36,7 @@
                                 <li>- Show unlimited posts</li>
                                 <li>- Manually connect post with comments</li>
                                 <li>- Import comments automatically (with WP cron)</li>
+                                <li>- Faster and more efficient support</li>
                                 <li>... and more...</li>
                             </ul>
                         </td>
