@@ -13,8 +13,9 @@ Import Facebook comments into Wordpress.
 == Description ==
 
 FB Comments Importer is a simple plugin that lets you import comments from your Facebook page directly into Wordpress comments system.
-
 It gives your site an SEO boost and it makes it look even more alive.
+
+Since this is the first version, there are possibly some bugs so please open a support ticket if you notice one and we will fix it ASAP!
 
 == Installation ==
 
