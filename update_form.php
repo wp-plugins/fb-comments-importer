@@ -5,15 +5,15 @@
                 <table>
                     <tr>
                         <td>Facebook Fan Page ID :</td>
-                        <td><input name="pageID" type="text" value="<?= $pageID; ?>" class="regular-text"></td>
+                        <td><input name="pageID" type="text" value="<?php echo $pageID; ?>" class="regular-text"></td>
                     </tr>
                     <tr>
                         <td><a href="https://developers.facebook.com/apps" target="_blank">APP ID:</a></td>
-                        <td><input name="appID" type="text" value="<?= $appID; ?>" class="regular-text"></td>
+                        <td><input name="appID" type="text" value="<?php echo $appID; ?>" class="regular-text"></td>
                     </tr>
                     <tr>
                         <td><a href="https://developers.facebook.com/apps" target="_blank">APP Secret Code:</a></td>
-                        <td><input name="appSecret" type="text" value="<?= $appSecret; ?>" class="regular-text"></td>
+                        <td><input name="appSecret" type="text" value="<?php echo $appSecret; ?>" class="regular-text"></td>
                     </tr>
                     <tr>
                         <td></td>
