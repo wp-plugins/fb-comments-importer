@@ -3,8 +3,8 @@ Contributors: filipmedia, ivan.m89
 Donate link: 
 Tags: fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
-Tested up to: 3.5.1
-Stable tag: 1.0.2
+Tested up to: 3.6
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,16 +12,25 @@ Import Facebook comments into Wordpress.
 
 == Description ==
 
-FB Comments Importer is a simple plugin that lets you import comments from your Facebook page directly into Wordpress comments system.
+FB Comments Importer is a simple plugin that lets you import comments from your Facebook page directly into a Wordpress comments system.
 It gives your site an SEO boost and it makes it look even more alive.
 
-Since this is the first version, there are possibly some bugs so please open a support ticket if you notice one and we will fix it ASAP!
+We also have a PRO version with additional features:
+* Import comments from regular posts, images or statuses
+* Import from pages, groups or profiles
+* Manually connect post with comments
+* Import from older posts
+* Automate the import process (with WP cron)
+* Faster and more efficient support
+
+For any issues with the plugin, please open a support ticket and we will fix it ASAP!
 
 == Installation ==
 
-1. Unzip `FBCommentsImporterFree.zip` to your `/wp-content/plugins/` directory
+1. Unzip `fb-comments-importer.zip` to your `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Setup the plugin options by using the `FB Comments Importer` page
+3. Create a Facebook APP at developers.facebook.com/apps/
+4. Configure the plugin by going to the `FB Comments Importer` page
 
 == Frequently asked questions =
 
@@ -37,3 +46,11 @@ Since this is the first version, there are possibly some bugs so please open a s
 
 = 1.0.2 2013-03-10 =
 * Fix: Plugin didnt work on some server configurations with short_tags set to off in php.ini
+
+= 1.3 2013-08-15 =
+* New: Plugin now imports the Facebook comment replies as well as regular comments.
+* New: Expanded the limit of posts available for import to 50. For more you need to purchase a PRO version.
+* New: Added the CURL check, so the plugin reports if you don't have it enabled on your server.
+* New: Added the "Show / Hide unavailable posts" button.
+* Fix: Comments count is now retrieved about twice times faster.
+* Fix: Fixed several bug fixes which usually led to a blank page or different PHP errors.

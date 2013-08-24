@@ -1,12 +1,13 @@
 <?php
 /*
-Plugin Name: FB Comments Importer - Free
+Plugin Name: FB Comments Importer
 Plugin URI: http://projects.geekydump.com/
-Description: Import facebook comments to your wordpress site
-Version: 1.0.2
+Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
+Version: 1.3
 Author: Ivan M & steelmaiden
 */
 
+require_once 'FBComments.class.inc';
 /*
  * admin page
  */
@@ -16,81 +17,21 @@ add_action( 'admin_menu', 'fbsync_comments_free_plugin_menu' );
 // add avatar from FB
 
 add_filter('get_avatar', 'comimp_get_avatar_free', 10, 5);
-function comimp_get_avatar_free($avatar, $id_or_email, $size='50') {
-	if (!is_object($id_or_email)) { 
-		$id_or_email = get_comment($id_or_email);
-    }
-
-    if (is_object($id_or_email)) {
-        if ($id_or_email->comment_agent=='facebook-comment-importer plugin'){
-			$alt = '';
-            $fb_url = $id_or_email->comment_author_url;
-            $fb_array = split("/", $fb_url);
-            $fb_id = $fb_array[count($fb_array)-1];
-            if (strlen($fb_id)>1) {
-                $img = "http://graph.facebook.com/".$fb_id."/picture";
-                return "<img alt='{$alt}' src='{$img}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' />";
-            }
-        }
-    }
+function comimp_get_avatar_free($avatar, $id_or_email, $size = '50') {
+    $FBCommentsFree = new FBCommentsFree();
+    $avatar = $FBCommentsFree->GenerateAvatar($avatar, $id_or_email, $size);
     return $avatar;
 }
 
 
 function fbsync_comments_free_plugin_menu() {
-        add_menu_page(__('FB Comments Importer','fbsync_comments_options_f'), __('FB Comments Importer','fbsync_comments_options_f'), 'manage_options', 'fbsync_comments_free', 'fbsync_comments_plugin_options_f' );
+    add_menu_page(__('FB Comments Importer', 'fbsync_comments_options_f'), __('FB Comments Importer', 'fbsync_comments_options_f'), 'manage_options', 'fbsync_comments_free', 'fbsync_comments_plugin_options_f');
+    wp_register_script( 'FBScriptReadyFree', plugins_url('js/script.js?v=2', __FILE__) );
+    wp_enqueue_script( 'FBScriptReadyFree' );
 }
 
-// curl get content
-function gethttps_data_f($fullurl) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($ch, CURLOPT_FAILONERROR, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
-    curl_setopt($ch, CURLOPT_URL, $fullurl);
-    $returned = curl_exec($ch);
 
-    return $returned;
-}
 
-// get post id from post name
-function post_id_from_name($post_title,$fid){
-    global $wpdb;
-    $post_count = $wpdb->get_var( "SELECT COUNT(*) FROM ".$wpdb->prefix."posts WHERE post_name = '".$post_title."'" );
-    $post_id = $wpdb->get_var("SELECT ID FROM ".$wpdb->prefix."posts WHERE post_name = '".$post_title."'");
-
-    if($post_count == 1){
-        return $post_id;
-    }
-    else {
-        global $wpdb;
-        $post_count = $wpdb->get_var( "SELECT COUNT(*) FROM ".$wpdb->prefix."fb_comments_image_data WHERE imgid = '".$fid."'" );
-        if($post_count >=1){
-            global $wpdb;
-            $post_id = $wpdb->get_var("SELECT postid FROM ".$wpdb->prefix."fb_comments_image_data WHERE imgid = '".$fid."'");
-            return $post_id;
-        }
-        else {
-            return "-";
-        }
-    }
-}
-
-function total_comments_f($post_id){
-    if($post_id == "-"){
-        return 0;
-    }
-    else {
-    global $wpdb;
-        $commentes_num = $wpdb->get_var( "SELECT COUNT(*) FROM ".$wpdb->prefix."comments WHERE comment_post_ID = '".$post_id."'" );
-         //$commentes_num = get_comments_number( $post_id );
-        return $commentes_num;
-    }
-}
 
 // admin page
 function fbsync_comments_plugin_options_f() {
@@ -122,87 +63,29 @@ function fbsync_comments_plugin_options_f() {
         }
         // Show comments
         else {
-            
-            // get data from dataase
+            // update settings form template
             $pageID = get_option('fbsync_comments_pageID');
             $appID = get_option('fbsync_comments_appID');
             $appSecret = get_option('fbsync_comments_appSecret');
-            
-            // update settings form template
-            include("update_form.php");
-            
-            $fullurl = "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id=$appID&client_secret=$appSecret";
-            $ret = gethttps_data_f($fullurl);
-            // get limit
-            $limit = $_POST[limit];
-            if(!$limit){
-                $limit = "25";
-            }
-            
-            $data = gethttps_data_f("https://graph.facebook.com/$pageID/posts/?$ret&limit=30");
-            $obj = json_decode($data);
-            
-            // parse object
             $wp_site_url = get_site_url();
             
-            ?>
-            <h2><?php echo $wp_site_url;?></h2>
-            <h3>Latest Posts:</h3>
-            <table class="widefat" style="margin-top: 10px;">
-                <thead>
-                    <tr>
-                        <th width="250">Title</th>
-                        <th width="200">URL</th>
-                        <th>Type</th>
-                        <th>FB Comments</th>
-                        <th>WP Comments</th>
-                        <th>Import</th>
-                        <th>Connected</th>
-                    </tr>
-                </thead>
-                <tbody>
-            <?php
-            foreach ($obj->data as $element) {
-                // get data from facebook api pbject
-                $link = $element->link;
-                $name = $element->name;
-                $picture = $element->picture;
-                $message = $element->message;
-                $type = $element->type;
-                $comments_count = $element->comments->count;
-                $id = $element->id;
-                 
-                
-                if($name){
-                    
-                    $wp_post_id = url_to_postid($link);
-                    
-                    $pos = strpos($link, $wp_site_url);
-                    if ($pos === false) {
-                        $wp_post_id = "-";
-                    }
-
-                    if($wp_post_id!="-"){
-                        
-                        $ukupno_komentara = total_comments_f($wp_post_id);
-                        ?>
-                        <tr>
-                            <td><b>(<?php echo $type;?>)</b> <?php echo $name;?></td>
-                            <td><a href="<?php echo $link;?>" target="_blank"><? echo substr($link, 0, 50);?></a></td>
-                            <td>Article</td>
-                            <td><?php echo $comments_count;?></td>
-                            <td><?php echo $ukupno_komentara;?></td>
-                            <td><a href="?page=fbsync_comments_free&action=import&fbid=<?php echo $id;?>&post_id=<?php echo $wp_post_id;?>">Import Now!</a></td>
-                            <td>Yes</td>
-                        </tr>
-                        <?php
-                    }
-                }
+            // show update form, and buy now message
+            include("update_form.php");
+            
+            // new FB comments object, and generate access token
+            $FBCommentsFree = new FBCommentsFree();
+            $token = $FBCommentsFree->GenerateAccessToken();
+            
+            // get limit from post
+            $limit = $_POST['limit'];
+            if(!$limit){
+                $limit = "30";
             }
-            ?>
-                </tbody>
-            </table>  
-            <?php
+            
+            // get items
+            $FBObject = $FBCommentsFree->GetListOfFBPosts($limit, $token);
+            // show template
+            include("templates/home.php");
              
         }
         
@@ -215,7 +98,7 @@ function fbsync_comments_plugin_options_f() {
 
 function my_fb_commentes_sync_activation_f() {
     
-    $my_fb_plugin_version = "1.1";
+    $my_fb_plugin_version = "1.3";
     global $wpdb;
 
     // Check if installed

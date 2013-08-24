@@ -1,3 +1,11 @@
+<?php  
+if(!function_exists('curl_version')){
+    echo '<div style="border: 1px solid #000000; padding: 5px; background: #FF0D00; border-radius: 5px; color: #fff">';
+    echo "<b>ERROR: cURL is NOT installed on this server. Please enable curl to use this plugin.</b>";
+    echo '</div>';
+} 
+?>
+
 <table width="100%">
     <tr>
         <td width="50%">
@@ -23,26 +31,26 @@
             </form>
         </td>
         <td valign="top">
-            <div style="border: 1px solid #000000; padding: 5px; background: #DBFFE9; height: 200px; border-radius: 15px;">
+            <div style="border: 1px solid #000000; padding: 5px; background: #DBFFE9; height: 220px; border-radius: 15px;">
                 <center>
-                <h2><a href="http://projects.geekydump.com" target="_blank">Get Premium version now!</a></h2>
+                <h2><a href="http://projects.geekydump.com/fb-comments-importer/" target="_blank">Get PRO version now!</a></h2>
                 </center>
                 <table width="100%">
                     <tr>
                         <td>
-                            <b>Premium Features: </b><br>
+                            <b>PRO Features: </b><br>
                             <ul>
-                                <li>- Import comments from images</li>
-                                <li>- Show unlimited posts</li>
+                                <li>- Import comments from images, statuses, pages, groups and profiles</li>
                                 <li>- Manually connect post with comments</li>
+                                <li>- Import from older posts</li>
                                 <li>- Import comments automatically (with WP cron)</li>
                                 <li>- Faster and more efficient support</li>
                                 <li>... and more...</li>
                             </ul>
                         </td>
-                        <td align="center" valign="top">
+                        <td align="center" valign="top" width="200">
                             <h1>Only $24.99</h1>
-                            <h3><a href="http://projects.geekydump.com" target="_blank">Order now!</a></h3>
+                            <h3><a href="http://projects.geekydump.com/fb-comments-importer/" target="_blank">Order now!</a></h3>
                         </td>
                     </tr>
                 </table>
