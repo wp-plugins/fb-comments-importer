@@ -42,15 +42,15 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 * New: Initial release
 
 = 1.0.1 2013-03-02 =
-* Fix: Manual import was giving some errors on some server configurations.
+* Manual import was giving some errors on some server configurations.
 
 = 1.0.2 2013-03-10 =
-* Fix: Plugin didnt work on some server configurations with short_tags set to off in php.ini
+* Plugin didnt work on some server configurations with short_tags set to off in php.ini
 
 = 1.3 2013-08-15 =
-* New: Plugin now imports the Facebook comment replies as well as regular comments.
-* New: Expanded the limit of posts available for import to 50. For more you need to purchase a PRO version.
-* New: Added the CURL check, so the plugin reports if you don't have it enabled on your server.
-* New: Added the "Show / Hide unavailable posts" button.
-* Fix: Comments count is now retrieved about twice times faster.
-* Fix: Fixed several bug fixes which usually led to a blank page or different PHP errors.
+* Plugin now imports the Facebook comment replies as well as regular comments.
+* Expanded the limit of posts available for import to 50. For more you need to purchase a PRO version.
+* Added the CURL check, so the plugin reports if you don't have it enabled on your server.
+* Added the "Show / Hide unavailable posts" button.
+* Comments count is now retrieved about twice times faster.
+* Fixed several bugs which usually led to a blank page or different PHP errors.
