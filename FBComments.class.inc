@@ -21,7 +21,9 @@ Class FBCommentsFree{
         }
 
         if (is_object($id_or_email)) {
-            if ($id_or_email->comment_agent == 'facebook-comment-importer plugin') {
+            
+            $ag_part = explode("__",$id_or_email->comment_agent); /// get only agent, remove hash
+            if ($ag_part[0] == 'facebook-comment-importer-plugin' OR $id_or_email->comment_agent == 'facebook-comment-importer plugin') {
                 $alt = '';
                 $fb_url = $id_or_email->comment_author_url;
                 $fb_array = split("/", $fb_url);
@@ -228,16 +230,50 @@ Class FBCommentsFree{
     }
     
     /**
+     * Generate array with all comments for single post
+     * @param type $postid
+     * @return type
+     */
+    public function GenerateCommentsArrayForPost($postid){
+        
+        $all_my_comments = array();
+        
+        $my_comments = get_comments( array("post_id"=>$postid) );
+        foreach($my_comments as $comment){
+            $all_my_comments[] = $comment->comment_content;
+        }
+        return $all_my_comments;
+    }
+    public function GenerateCommentsArrayForPostAgent($postid){
+        
+        $all_my_comments = array();
+        
+        $my_comments = get_comments( array("post_id"=>$postid) );
+        foreach($my_comments as $comment){
+            $all_my_comments[] = $comment->comment_agent;
+        }
+        return $all_my_comments;
+    }
+     
+    /**
      * Check is this double comment
      * @global type $wpdb
      * @param type $cid
      * @param type $mess
      * @return type
      */
-    public function IsDoubleComment($cid, $mess){
-        global $wpdb;
-        $num = $wpdb->get_var( "SELECT COUNT(*) FROM ".$wpdb->prefix."comments WHERE comment_post_ID = '" . $cid . "' AND comment_content = '" . $mess . "'");
-        return $num;
+    public function IsDoubleComment($cid, $user_agent,$mess,$comments_array){
+        //$mess = addslashes($mess);
+        
+        if(in_array($user_agent,$comments_array)){
+            return "1";
+        }
+        else {
+            
+            global $wpdb;
+            $num = $wpdb->get_var( "SELECT COUNT(*) FROM ".$wpdb->prefix."comments WHERE comment_post_ID = '" . $cid . "' AND comment_content = '" . $mess . "'");
+            return $num;
+        }
     }
     /**
      * Check is this double comment meta
@@ -267,6 +303,9 @@ Class FBCommentsFree{
         $file = $this->GetHTTPSData('https://graph.facebook.com/'.$id.'/comments?'.$token.'limit=1000&fields=id,from,message,created_time');
         $FBobject = json_decode($file);
         $FBCommentsArray = array_reverse($FBobject->data);
+        
+        // get all comments for this post
+        $all_comments_for_post = $this->GenerateCommentsArrayForPostAgent($post_id);
 
         // parse FB object, and create array for db insert
         if($FBCommentsArray){
@@ -281,7 +320,7 @@ Class FBCommentsFree{
                 $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
                 $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
                 $data['profile_link'] = 'http://www.facebook.com/'.$data['fb_username'];
-                $data['double_comment_check'] = $this->IsDoubleComment($post_id, $SingleCommentData->message);
+                $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                 $data['replies'] = $this->GetFBComments($SingleCommentData->id,$post_id);
                 $Comments[] = $data;
                 unset($SingleCommentData);
@@ -308,7 +347,7 @@ Class FBCommentsFree{
                     $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
                     $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
                     $data['profile_link'] = 'http://www.facebook.com/'.$data['fb_username'];
-                    $data['double_comment_check'] = $this->IsDoubleComment($post_id, $SingleCommentData->message);
+                    $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                     $data['replies'] = $this->GetFBComments($SingleCommentData->id,$post_id);
                     $Comments[] = $data;
                     unset($SingleCommentData);
@@ -344,53 +383,56 @@ Class FBCommentsFree{
      */
     public function SaveCommentsToDatabase($comments,$post_id){
         
-        $ag = "facebook-comment-importer plugin"; // set comment agent
-        
+
         $i=0;
-        // parse comments
-        foreach($comments as $comment){
-            
-            // check is this double comment, if yes skip it
-            if(!$comment['double_comment_check']){
-            
-                $data = array(
-                    'comment_post_ID' => $post_id,
-                    'comment_author' => $comment['from_name'],
-                    'comment_author_url' => $comment['profile_link'],
-                    'comment_content' => $comment['message'],
-                    'comment_type' => 'comment',
-                    'comment_agent' => $ag,
-                    'comment_date' => $comment['wp_date'],
-                    'comment_date_gmt' =>$comment['wp_date'], 
-                    'comment_approved' => 1,
-                );
-                $parent_comment = wp_insert_comment($data);
+        if($comments){
+            // parse comments
+            foreach($comments as $comment){
+
+                // check is this double comment, if yes skip it
+                if($comment['double_comment_check']=="0"){
+
+                    $ag = "facebook-comment-importer-plugin__".$comment['comment_id']; // set comment agent
+                    
+                    $data = array(
+                        'comment_post_ID' => $post_id,
+                        'comment_author' => $comment['from_name'],
+                        'comment_author_url' => $comment['profile_link'],
+                        'comment_content' => $comment['message'],
+                        'comment_agent' => $ag,
+                        'comment_date' => $comment['wp_date'],
+                        'comment_date_gmt' =>$comment['wp_date'], 
+                        'comment_approved' => 1,
+                    );
+                    $parent_comment = wp_insert_comment($data);
 
 
-                // insert replies if exist
-                if($comment['replies']){
-                    // parse replies
-                    foreach($comment['replies'] as $replay){
-                        $data = array(
-                            'comment_post_ID' => $post_id,
-                            'comment_author' => $replay['from_name'],
-                            'comment_author_url' => $replay['profile_link'],
-                            'comment_content' => $replay['message'],
-                            'comment_type' => 'comment',
-                            'comment_parent'=> $parent_comment,
-                            'comment_agent' => $ag,
-                            'comment_date' => $replay['wp_date'],
-                            'comment_date_gmt' => $replay['wp_date'], 
-                            'comment_approved' => 1,
-                        );
-                        wp_insert_comment($data);
+                    // insert replies if exist
+                    if($comment['replies']){
+                        $ag = "facebook-comment-importer-plugin__".$replay['comment_id']; // set comment agent
+                        // parse replies
+                        foreach($comment['replies'] as $replay){
+                            $data = array(
+                                'comment_post_ID' => $post_id,
+                                'comment_author' => $replay['from_name'],
+                                'comment_author_url' => $replay['profile_link'],
+                                'comment_content' => $replay['message'],
+                                'comment_parent'=> $parent_comment,
+                                'comment_agent' => $ag,
+                                'comment_date' => $replay['wp_date'],
+                                'comment_date_gmt' => $replay['wp_date'], 
+                                'comment_approved' => 1,
+                            );
+                            wp_insert_comment($data);
+                        }
+
                     }
-
+                    $i++;
                 }
-                $i++;
+
+
             }
-            
-            
+        
         }
         // update comment count
         wp_update_comment_count($post_id);

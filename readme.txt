@@ -4,7 +4,7 @@ Donate link:
 Tags: fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
 Tested up to: 3.6
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,14 +39,9 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 
 == Changelog ==
 
-= 1.0 2013-03-01 =
-* New: Initial release
-
-= 1.0.1 2013-03-02 =
-* Manual import was giving some errors on some server configurations.
-
-= 1.0.2 2013-03-10 =
-* Plugin didnt work on some server configurations with short_tags set to off in php.ini
+= 1.3.1 2013-08-31 =
+* Fixed bug with importing duplicate comments in posts with the non-standard Facebook emoticons.
+* Fixed some warning in_array errors.
 
 = 1.3 2013-08-15 =
 * Plugin now imports the Facebook comment replies as well as regular comments.
@@ -55,3 +50,12 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 * Added the "Show / Hide unavailable posts" button.
 * Comments count is now retrieved about twice times faster.
 * Fixed several bugs which usually led to a blank page or different PHP errors.
+
+= 1.0.2 2013-03-10 =
+* Plugin didnt work on some server configurations with short_tags set to off in php.ini
+
+= 1.0.1 2013-03-02 =
+* Manual import was giving some errors on some server configurations.
+
+= 1.0 2013-03-01 =
+* Initial release
