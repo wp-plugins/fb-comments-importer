@@ -288,7 +288,18 @@ Class FBCommentsFree{
         return $num;
     }
     
-    
+    /**
+     * Get comment ID from useragent
+     * @global type $wpdb
+     * @param type $postid
+     * @param type $user_agent
+     * @return type
+     */
+    public function GetTopCommentID($postid, $user_agent){
+        global $wpdb;
+        $num = $wpdb->get_var( "SELECT comment_ID FROM ".$wpdb->prefix."comments WHERE comment_post_ID = '" . $postid . "' AND comment_agent = '" . $user_agent . "'");
+        return $num;
+    }
     
     /**
      * get comments and replies for single post
@@ -302,41 +313,16 @@ Class FBCommentsFree{
         
         $file = $this->GetHTTPSData('https://graph.facebook.com/'.$id.'/comments?'.$token.'limit=1000&fields=id,from,message,created_time');
         $FBobject = json_decode($file);
-        $FBCommentsArray = array_reverse($FBobject->data);
         
-        // get all comments for this post
-        $all_comments_for_post = $this->GenerateCommentsArrayForPostAgent($post_id);
+        if($FBobject->data){
+            $FBCommentsArray = array_reverse($FBobject->data);
+        
+            // get all comments for this post
+            $all_comments_for_post = $this->GenerateCommentsArrayForPostAgent($post_id);
 
-        // parse FB object, and create array for db insert
-        if($FBCommentsArray){
-            foreach($FBCommentsArray as $SingleCommentData){
-                
-                $data['comment_id'] = $SingleCommentData->id;
-                $data['from_name'] = $SingleCommentData->from->name;
-                $data['from_id'] = $SingleCommentData->from->id;
-                $data['message'] = $SingleCommentData->message;
-                $data['created_time'] = $SingleCommentData->created_time;
-                $data['timestamp'] = strtotime($SingleCommentData->created_time);
-                $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
-                $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
-                $data['profile_link'] = 'http://www.facebook.com/'.$data['fb_username'];
-                $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
-                $data['replies'] = $this->GetFBComments($SingleCommentData->id,$post_id);
-                $Comments[] = $data;
-                unset($SingleCommentData);
-            }
-        }
-        
-        
-        // get comments from next page (max limit is 2000)
-        if($FBobject->paging->next){
-            
-            $file_next = $this->GetHTTPSData($FBobject->paging->next);
-            $FBobject_next = json_decode($file_next);
-            $FBCommentsArray_next = array_reverse($FBobject_next->data);
-            
-            if($FBCommentsArray_next){
-                foreach($FBCommentsArray_next as $SingleCommentData){
+            // parse FB object, and create array for db insert
+            if($FBCommentsArray){
+                foreach($FBCommentsArray as $SingleCommentData){
 
                     $data['comment_id'] = $SingleCommentData->id;
                     $data['from_name'] = $SingleCommentData->from->name;
@@ -348,14 +334,47 @@ Class FBCommentsFree{
                     $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
                     $data['profile_link'] = 'http://www.facebook.com/'.$data['fb_username'];
                     $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
+                    if($data['double_comment_check'] == "1"){
+                        $data['current_comment_id'] = $this->GetTopCommentID($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id);
+                    }
                     $data['replies'] = $this->GetFBComments($SingleCommentData->id,$post_id);
                     $Comments[] = $data;
                     unset($SingleCommentData);
                 }
             }
-            
+
+
+            // get comments from next page (max limit is 2000)
+            if($FBobject->paging->next){
+
+                $file_next = $this->GetHTTPSData($FBobject->paging->next);
+                $FBobject_next = json_decode($file_next);
+                $FBCommentsArray_next = array_reverse($FBobject_next->data);
+
+                if($FBCommentsArray_next){
+                    foreach($FBCommentsArray_next as $SingleCommentData){
+
+                        $data['comment_id'] = $SingleCommentData->id;
+                        $data['from_name'] = $SingleCommentData->from->name;
+                        $data['from_id'] = $SingleCommentData->from->id;
+                        $data['message'] = $SingleCommentData->message;
+                        $data['created_time'] = $SingleCommentData->created_time;
+                        $data['timestamp'] = strtotime($SingleCommentData->created_time);
+                        $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
+                        $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
+                        $data['profile_link'] = 'http://www.facebook.com/'.$data['fb_username'];
+                        $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
+                        if($data['double_comment_check'] == "1"){
+                            $data['current_comment_id'] = $this->GetTopCommentID($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id);
+                        }
+                        $data['replies'] = $this->GetFBComments($SingleCommentData->id,$post_id);
+                        $Comments[] = $data;
+                        unset($SingleCommentData);
+                    }
+                }
+
+            }
         }
-        
         // return complete array with replays
         return $Comments;
     }
@@ -406,12 +425,19 @@ Class FBCommentsFree{
                     );
                     $parent_comment = wp_insert_comment($data);
 
+                }
+                else {
+                    $parent_comment = $comment['current_comment_id'];
+                }
 
-                    // insert replies if exist
-                    if($comment['replies']){
-                        $ag = "facebook-comment-importer-plugin__".$replay['comment_id']; // set comment agent
-                        // parse replies
-                        foreach($comment['replies'] as $replay){
+                // insert replies if exist
+                if($comment['replies']){
+                    
+                    // parse replies
+                    foreach($comment['replies'] as $replay){
+                        
+                        if($comment['double_comment_check']=="0"){
+                            $ag = "facebook-comment-importer-plugin__".$replay['comment_id']; // set comment agent
                             $data = array(
                                 'comment_post_ID' => $post_id,
                                 'comment_author' => $replay['from_name'],
@@ -424,11 +450,14 @@ Class FBCommentsFree{
                                 'comment_approved' => 1,
                             );
                             wp_insert_comment($data);
+                            $i++;
+                            
                         }
-
                     }
-                    $i++;
+
                 }
+
+                
 
 
             }

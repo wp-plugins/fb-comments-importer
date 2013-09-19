@@ -3,8 +3,8 @@ Contributors: filipmedia, ivan.m89
 Donate link: 
 Tags: fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
-Tested up to: 3.6
-Stable tag: 1.3.1
+Tested up to: 3.6.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,7 @@ We also have a **PRO** version with additional features:
 * Manually connect post with comments
 * Import from older posts
 * Automate the import process (with WP cron)
+* Turn the cron on/off or restart it
 * Faster and more efficient support
 
 For any issues with the plugin, please open a support ticket and we will fix it ASAP!
@@ -37,7 +38,16 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 
 == Screenshots ==
 
+1. FB Comments Importer FREE
+2. FB Comments Importer PRO
+
 == Changelog ==
+
+= 1.3.2 2013-09-19 =
+* Improved duplicate comments detection.
+* Fixed bug with user avatars not being displayed.
+* Removed the ugly array warning message when trying to import post without comments.
+* Added a screenshot for free and pro versions
 
 = 1.3.1 2013-08-31 =
 * Fixed bug with importing duplicate comments in posts with the non-standard Facebook emoticons.
