@@ -34,7 +34,7 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 3. Create a Facebook APP at developers.facebook.com/apps/
 4. Configure the plugin by going to the `FB Comments Importer` page
 
-== Frequently asked questions =
+== Frequently asked questions ==
 
 == Screenshots ==
 
