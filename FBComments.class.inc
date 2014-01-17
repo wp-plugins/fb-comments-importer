@@ -272,7 +272,11 @@ Class FBCommentsFree{
             
             global $wpdb;
             $num = $wpdb->get_var( "SELECT COUNT(*) FROM ".$wpdb->prefix."comments WHERE comment_post_ID = '" . $cid . "' AND comment_content = '" . $mess . "'");
-            return $num;
+            if (!$num) {
+                return "0";
+            } else {
+                return $num;
+            }
         }
     }
     /**
@@ -285,7 +289,11 @@ Class FBCommentsFree{
     public function IsDoubleCommentmeta($cid, $mv){
         global $wpdb;
         $num = $wpdb->get_var( "SELECT COUNT(*) FROM ".$wpdb->prefix."commentmeta WHERE comment_id = '" . $cid . "' AND meta_value = '" . $mv . "'");
-        return $num;
+        if(!$num){
+		return "0";
+	} else {
+            	return $num;
+	}
     }
     
     /**
@@ -298,7 +306,11 @@ Class FBCommentsFree{
     public function GetTopCommentID($postid, $user_agent){
         global $wpdb;
         $num = $wpdb->get_var( "SELECT comment_ID FROM ".$wpdb->prefix."comments WHERE comment_post_ID = '" . $postid . "' AND comment_agent = '" . $user_agent . "'");
-        return $num;
+        if(!$num){
+		return "0";
+	} else {
+            	return $num;
+	}
     }
     
     /**

@@ -3,8 +3,8 @@ Contributors: filipmedia, ivan.m89
 Donate link: 
 Tags: fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
-Tested up to: 3.6.1
-Stable tag: 1.3.2
+Tested up to: 3.8
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,10 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 2. FB Comments Importer PRO
 
 == Changelog ==
+
+= 1.3.3 2013-01-17 =
+* Fixed another bug with duplicate comments being imported
+* Better compatibility with Wordpress 3.8
 
 = 1.3.2 2013-09-19 =
 * Improved duplicate comments detection.
