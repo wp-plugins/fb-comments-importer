@@ -28,6 +28,8 @@ function fbsync_comments_free_plugin_menu() {
     add_menu_page(__('FB Comments Importer', 'fbsync_comments_options_f'), __('FB Comments Importer', 'fbsync_comments_options_f'), 'manage_options', 'fbsync_comments_free', 'fbsync_comments_plugin_options_f');
     wp_register_script( 'FBScriptReadyFree', plugins_url('js/script.js?v=2', __FILE__) );
     wp_enqueue_script( 'FBScriptReadyFree' );
+    wp_register_style( 'FBmyPluginStylesheet', plugins_url('css/css.css?v=2', __FILE__) );
+    wp_enqueue_style( 'FBmyPluginStylesheet' );
 }
 
 
@@ -49,10 +51,12 @@ function fbsync_comments_plugin_options_f() {
             $pageID = $_POST['pageID'];
             $appID = $_POST['appID'];
             $appSecret = $_POST['appSecret'];
+            $commentsStatus = $_POST['comments_status'];
             
             update_option('fbsync_comments_pageID', $pageID);
             update_option('fbsync_comments_appID', $appID);
             update_option('fbsync_comments_appSecret', $appSecret);
+            update_option('commentes_importer_comments_status', $commentsStatus);
             
             echo "Settings are saved!";
             ?><meta http-equiv="REFRESH" content="2;url=?page=fbsync_comments_free"><?php
@@ -67,6 +71,7 @@ function fbsync_comments_plugin_options_f() {
             $pageID = get_option('fbsync_comments_pageID');
             $appID = get_option('fbsync_comments_appID');
             $appSecret = get_option('fbsync_comments_appSecret');
+            $comments_status_value = get_option('commentes_importer_comments_status');
             $wp_site_url = get_site_url();
             
             // show update form, and buy now message

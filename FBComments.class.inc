@@ -5,6 +5,7 @@ Class FBCommentsFree{
         $this->appID = get_option('fbsync_comments_appID');
         $this->pageID = get_option('fbsync_comments_pageID');
         $this->appSecret = get_option('fbsync_comments_appSecret');
+        $this->comments_status = get_option('commentes_importer_comments_status');
     }
     
     
@@ -414,6 +415,11 @@ Class FBCommentsFree{
      */
     public function SaveCommentsToDatabase($comments,$post_id){
         
+        // check comment status
+        $comments_status_value = $this->comments_status;
+        if(!$comments_status_value){
+            $comments_status_value = "0";
+        }
 
         $i=0;
         if($comments){
@@ -433,10 +439,10 @@ Class FBCommentsFree{
                         'comment_agent' => $ag,
                         'comment_date' => $comment['wp_date'],
                         'comment_date_gmt' =>$comment['wp_date'], 
-                        'comment_approved' => 1,
+                        'comment_approved' => $comments_status_value,
                     );
                     $parent_comment = wp_insert_comment($data);
-
+                    $i++;
                 }
                 else {
                     $parent_comment = $comment['current_comment_id'];
@@ -459,7 +465,7 @@ Class FBCommentsFree{
                                 'comment_agent' => $ag,
                                 'comment_date' => $replay['wp_date'],
                                 'comment_date_gmt' => $replay['wp_date'], 
-                                'comment_approved' => 1,
+                                'comment_approved' => $comments_status_value,
                             );
                             wp_insert_comment($data);
                             $i++;

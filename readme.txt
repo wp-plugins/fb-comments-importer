@@ -4,7 +4,7 @@ Donate link:
 Tags: fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 1.3.3
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,11 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 2. FB Comments Importer PRO
 
 == Changelog ==
+
+= 1.4 2014-04-10 =
+* NEW FEATURE: now you can change status for imported comments (pending or approved)
+* Few bugs fixed (number of imported comments was wrong, limit in form and etc...)
+* Admin interface improvements
 
 = 1.3.3 2013-01-17 =
 * Fixed another bug with duplicate comments being imported
