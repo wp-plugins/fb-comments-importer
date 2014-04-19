@@ -48,7 +48,7 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 * Few bugs fixed (number of imported comments was wrong, limit in form and etc...)
 * Admin interface improvements
 
-= 1.3.3 2013-01-17 =
+= 1.3.3 2014-01-17 =
 * Fixed another bug with duplicate comments being imported
 * Better compatibility with Wordpress 3.8
 
