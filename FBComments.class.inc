@@ -345,7 +345,7 @@ Class FBCommentsFree{
                     $data['timestamp'] = strtotime($SingleCommentData->created_time);
                     $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
                     $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
-                    $data['profile_link'] = 'http://www.facebook.com/'.$data['fb_username'];
+                    $data['profile_link'] = 'http://www.facebook.com/'.$SingleCommentData->from->id;
                     $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                     if($data['double_comment_check'] == "1"){
                         $data['current_comment_id'] = $this->GetTopCommentID($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id);
@@ -375,7 +375,7 @@ Class FBCommentsFree{
                         $data['timestamp'] = strtotime($SingleCommentData->created_time);
                         $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
                         $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
-                        $data['profile_link'] = 'http://www.facebook.com/'.$data['fb_username'];
+                        $data['profile_link'] = 'http://www.facebook.com/'.$SingleCommentData->from->id;
                         $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                         if($data['double_comment_check'] == "1"){
                             $data['current_comment_id'] = $this->GetTopCommentID($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id);

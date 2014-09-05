@@ -3,7 +3,7 @@
 Plugin Name: FB Comments Importer
 Plugin URI: http://projects.geekydump.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.3.3
+Version: 1.4.1
 Author: Ivan M & steelmaiden
 */
 
