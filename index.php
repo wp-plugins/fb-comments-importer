@@ -3,7 +3,7 @@
 Plugin Name: FB Comments Importer
 Plugin URI: http://projects.geekydump.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.4.1
+Version: 1.5
 Author: Ivan M & steelmaiden
 */
 
@@ -16,7 +16,7 @@ add_action( 'admin_menu', 'fbsync_comments_free_plugin_menu' );
 
 // add avatar from FB
 
-add_filter('get_avatar', 'comimp_get_avatar_free', 10, 5);
+add_filter('get_avatar', 'comimp_get_avatar_free', 2, 5);
 function comimp_get_avatar_free($avatar, $id_or_email, $size = '50') {
     $FBCommentsFree = new FBCommentsFree();
     $avatar = $FBCommentsFree->GenerateAvatar($avatar, $id_or_email, $size);
@@ -103,7 +103,7 @@ function fbsync_comments_plugin_options_f() {
 
 function my_fb_commentes_sync_activation_f() {
     
-    $my_fb_plugin_version = "1.3";
+    $my_fb_plugin_version = "1.5";
     global $wpdb;
 
     // Check if installed
@@ -134,4 +134,3 @@ function my_fb_commentes_sync_activation_f() {
 }
 
 register_activation_hook(__FILE__, 'my_fb_commentes_sync_activation_f');
-?>

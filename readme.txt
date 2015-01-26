@@ -4,7 +4,7 @@ Donate link:
 Tags: fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
 Tested up to: 4.0
-Stable tag: 1.4.1
+Stable tag: 1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,10 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 2. FB Comments Importer PRO
 
 == Changelog ==
+
+= 1.5 2015-01-26 =
+* Light interface redesign
+* get_avatar filter priority changed
 
 = 1.4.1 2014-04-10 =
 * Avatar bug fixed. Facebook API has changed so we had to do it.

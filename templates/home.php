@@ -1,8 +1,9 @@
-
-<div class="infodiv">
-    <form action="#" method="POST">
-        Limit: <input type="text" name="limit" value="<?php echo $limit;?>"> <input type="submit" value="Show">
-    </form>
+<div class="postbox">
+    <div class="inside">
+        <form action="#" method="POST">
+            Limit: <input type="text" name="limit" value="<?php echo $limit;?>"> <input type="submit" value="Show">
+        </form>
+    </div>
 </div>
 
 <h2><?php echo $wp_site_url;?></h2>
