@@ -64,7 +64,7 @@
                     <?php
                     }
                     else {
-                        echo "<font color='red'><a href='http://projects.geekydump.com/fb-comments-importer/' target='_blank'>-- PRO Feature --</a></font>";
+                        echo "<font color='red'><a href='http://wp-resources.com/facebook-comments-importer/' target='_blank'>-- PRO Feature --</a></font>";
                     }
                     ?>
                 </td>
