@@ -40,28 +40,7 @@ if(!function_exists('curl_version')){
                     </form>
                 </td>
                 <td valign="top">
-                    <center>
-                            <h2><a href="http://wp-resources.com/facebook-comments-importer/" target="_blank">Get PRO version now!</a></h2>
-                    </center>
-                    <table width="100%">
-                        <tr>
-                            <td>
-                                <b>PRO Features: </b><br>
-                                <ul>
-                                    <li>- Import comments from images, statuses, pages, groups and profiles</li>
-                                    <li>- Manually connect post with comments</li>
-                                    <li>- Import from older posts</li>
-                                    <li>- Import comments automatically (with WP cron)</li>
-                                    <li>- Faster and more efficient support</li>
-                                    <li>... and more...</li>
-                                </ul>
-                            </td>
-                            <td align="center" valign="top" width="200">
-                                <h1>Only $24.99</h1>
-                                        <h3><a href="http://wp-resources.com/facebook-comments-importer/" target="_blank">Order now!</a></h3>
-                            </td>
-                        </tr>
-                    </table>
+                    <a href="http://wp-resources.com/facebook-comments-importer/" target="_blank"><img src="<?php echo plugin_dir_url( __FILE__ );?>advert.png"></a>
                 </td>
             </tr>
         </table>

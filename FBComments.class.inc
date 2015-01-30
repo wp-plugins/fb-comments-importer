@@ -51,7 +51,7 @@ Class FBCommentsFree{
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_FAILONERROR, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+        //curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
         curl_setopt($ch, CURLOPT_URL, $fullurl);
         $returned = curl_exec($ch);
 
@@ -146,7 +146,7 @@ Class FBCommentsFree{
             foreach ($obj->data as $element) {
 
 
-                if($element->name){
+                if(isset($element->name)){
                     
                     // check post id
                     $wp_post_id = url_to_postid($element->link);
@@ -157,12 +157,12 @@ Class FBCommentsFree{
                     
                     // if id does not exist skip this
                     
-                    $mydata['id'] = $element->id;
-                    $mydata['name'] = $element->name;
-                    $mydata['link'] = $element->link;
-                    $mydata['type'] = $element->type;
-                    $mydata['picture'] = $element->picture;
-                    $mydata['message'] = $element->message;
+                    $mydata['id'] = (isset($element->id)) ? $element->id : null;
+                    $mydata['name'] = (isset($element->name)) ? $element->name : null;
+                    $mydata['link'] = (isset($element->link)) ? $element->link : null;
+                    $mydata['type'] = (isset($element->type)) ? $element->type : null;
+                    $mydata['picture'] = (isset($element->picture)) ? $element->picture : null;
+                    $mydata['message'] = (isset($element->message)) ? $element->message : null;
                     // get only first 10
                     if($i <= 50){
                         $mydata['wp_post_id'] = $wp_post_id;
@@ -177,12 +177,12 @@ Class FBCommentsFree{
                     $i++;
                 }
                 else {
-                    $mydata['id'] = $element->id;
-                    $mydata['name'] = $element->name;
-                    $mydata['link'] = $element->link;
-                    $mydata['type'] = $element->type;
-                    $mydata['picture'] = $element->picture;
-                    $mydata['message'] = $element->message;
+                    $mydata['id'] = (isset($element->id)) ? $element->id : null;
+                    $mydata['name'] = (isset($element->name)) ? $element->name : null;
+                    $mydata['link'] = (isset($element->link)) ? $element->link : null;
+                    $mydata['type'] = (isset($element->type)) ? $element->type : null;
+                    $mydata['picture'] = (isset($element->picture)) ? $element->picture : null;
+                    $mydata['message'] = (isset($element->message)) ? $element->message : null;
                     $mydata['wp_post_id'] = "-";
                     //$mydata['comments_count'] = $this->CountCommentsForSingleItem($element->id,$token);
                     $mydata['total_comments'] = "0";
@@ -191,10 +191,11 @@ Class FBCommentsFree{
                 
             }
 
-
             return $FBPosts;
         }
-        else return false;
+        else  {
+         return false;
+    }
     }
     
     

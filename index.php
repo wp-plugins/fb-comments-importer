@@ -3,7 +3,7 @@
 Plugin Name: FB Comments Importer
 Plugin URI: http://projects.geekydump.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.5
+Version: 1.5.1
 Author: Ivan M & steelmaiden
 */
 
@@ -46,7 +46,8 @@ function fbsync_comments_plugin_options_f() {
 		wp_die( __( 'Access denied.' ) );
 	}
         // on save data click
-        if($_GET['action']=="save_data"){
+        $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+        if($action == "save_data"){
             
             $pageID = $_POST['pageID'];
             $appID = $_POST['appID'];
@@ -62,7 +63,7 @@ function fbsync_comments_plugin_options_f() {
             ?><meta http-equiv="REFRESH" content="2;url=?page=fbsync_comments_free"><?php
         }
         // on uvezi click
-        else if($_GET['action']=="import"){
+        else if($action == "import"){
             include("manual_import.php");
         }
         // Show comments
@@ -82,7 +83,7 @@ function fbsync_comments_plugin_options_f() {
             $token = $FBCommentsFree->GenerateAccessToken();
             
             // get limit from post
-            $limit = $_POST['limit'];
+            $limit = filter_input(INPUT_POST, 'limit', FILTER_SANITIZE_SPECIAL_CHARS);
             if(!$limit){
                 $limit = "30";
             }
