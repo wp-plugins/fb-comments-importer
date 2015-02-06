@@ -1,10 +1,10 @@
 === FB Comments Importer ===
-Contributors: filipmedia, ivan.m89
+Contributors: ivan.m89
 Donate link: 
 Tags: fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,10 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 2. FB Comments Importer PRO
 
 == Changelog ==
+
+= 1.5.2 2015-02-06 =
+* Fixed error handler for wrong facebook page ID
+* Few notices from error reporting fixed
 
 = 1.5.1 2015-01-30 =
 * Some notices from error reporting fixed

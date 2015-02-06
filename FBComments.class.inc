@@ -137,6 +137,9 @@ Class FBCommentsFree{
         $obj = json_decode($data);
         $wp_site_url = get_site_url();
         
+        if(isset($obj->error)){
+            return array("status"=>false,"msg"=>$obj->error->message,"error_code"=>$obj->error->code);
+        }
         
         // parse and prepare data from api
         if($obj->data){
@@ -194,8 +197,8 @@ Class FBCommentsFree{
             return $FBPosts;
         }
         else  {
-         return false;
-    }
+            return false;
+        }
     }
     
     
