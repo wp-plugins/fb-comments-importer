@@ -13,7 +13,7 @@ if(!function_exists('curl_version')){
                     <h2>Configuration:</h2>
                     <form action ="?page=fbsync_comments_free&action=save_data" method="POST">
                         <table>
-                            <tr>
+                            <tr width="150">
                                 <td>Facebook Fan Page ID :</td>
                                 <td><input name="pageID" type="text" value="<?php echo $pageID; ?>" class="regular-text"></td>
                             </tr>
@@ -30,6 +30,13 @@ if(!function_exists('curl_version')){
                                 <td>
                                     <input type="radio" <?php if($comments_status_value==1){echo "checked";}?> name="comments_status" value="1"> Approved 
                                     <input type="radio" <?php if($comments_status_value==0){echo "checked";}?> name="comments_status" value="0"> Not approved
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>follow url shortener redirects</td>
+                                <td>
+                                    <input type="radio" <?php if($follow_redirects==1){echo "checked";}?> name="follow_redirects" value="1"> Yes 
+                                    <input type="radio" <?php if($follow_redirects==0){echo "checked";}?> name="follow_redirects" value="0"> No
                                 </td>
                             </tr>
                             <tr>

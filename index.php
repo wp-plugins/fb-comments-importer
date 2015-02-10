@@ -3,7 +3,7 @@
 Plugin Name: FB Comments Importer
 Plugin URI: http://projects.geekydump.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.5.2
+Version: 1.6
 Author: Ivan M & steelmaiden
 */
 
@@ -34,7 +34,6 @@ function fbsync_comments_free_plugin_menu() {
 
 
 
-
 // admin page
 function fbsync_comments_plugin_options_f() {
         ?>
@@ -53,10 +52,12 @@ function fbsync_comments_plugin_options_f() {
             $appID = $_POST['appID'];
             $appSecret = $_POST['appSecret'];
             $commentsStatus = $_POST['comments_status'];
+            $followRedirects = $_POST['follow_redirects'];
             
             update_option('fbsync_comments_pageID', $pageID);
             update_option('fbsync_comments_appID', $appID);
             update_option('fbsync_comments_appSecret', $appSecret);
+            update_option('commentes_importer_follow_redirects', $followRedirects);
             update_option('commentes_importer_comments_status', $commentsStatus);
             
             echo "Settings are saved!";
@@ -73,6 +74,7 @@ function fbsync_comments_plugin_options_f() {
             $appID = get_option('fbsync_comments_appID');
             $appSecret = get_option('fbsync_comments_appSecret');
             $comments_status_value = get_option('commentes_importer_comments_status');
+            $follow_redirects = get_option('commentes_importer_follow_redirects');
             $wp_site_url = get_site_url();
             
             // show update form, and buy now message
@@ -141,3 +143,29 @@ function my_fb_commentes_sync_activation_f() {
 }
 
 register_activation_hook(__FILE__, 'my_fb_commentes_sync_activation_f');
+
+// follow short urls filter
+function fbcomments_importer_filter_shortner($url) {
+    
+    $follow_redirects = get_option('commentes_importer_follow_redirects');
+    
+    
+    if (function_exists('curl_init') && $follow_redirects) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE); // We'll parse redirect url from header.
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE); // We want to just get redirect url but not to follow it.
+        $response = curl_exec($ch);
+        preg_match_all('/^Location:(.*)$/mi', $response, $matches);
+        curl_close($ch);
+        if (!empty($matches[1])) { // if there's a location redirect use this
+            return trim($matches[1][0]);
+        } else {
+            return $url; // otherwise use normal url
+        }
+    } else {
+        return $url;  // no curl? use normal url.
+    }
+    
+}
+add_filter('url_to_postid', 'fbcomments_importer_filter_shortner', 0);

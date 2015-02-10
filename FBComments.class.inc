@@ -144,40 +144,32 @@ Class FBCommentsFree{
         // parse and prepare data from api
         if($obj->data){
             
-            $i=0;
             // genrate array
             foreach ($obj->data as $element) {
 
+                // set post ID to null
+                $wp_post_id = null;
 
                 if(isset($element->name)){
                     
+                    
                     // check post id
                     $wp_post_id = url_to_postid($element->link);
-                    $pos = strpos($element->link, $wp_site_url);
-                    if ($pos === false) {
+                    if (empty($wp_post_id)) {
                         $wp_post_id = "-";
                     }
                     
                     // if id does not exist skip this
-                    
                     $mydata['id'] = (isset($element->id)) ? $element->id : null;
                     $mydata['name'] = (isset($element->name)) ? $element->name : null;
                     $mydata['link'] = (isset($element->link)) ? $element->link : null;
                     $mydata['type'] = (isset($element->type)) ? $element->type : null;
                     $mydata['picture'] = (isset($element->picture)) ? $element->picture : null;
                     $mydata['message'] = (isset($element->message)) ? $element->message : null;
-                    // get only first 10
-                    if($i <= 50){
-                        $mydata['wp_post_id'] = $wp_post_id;
-                    }
-                    else {
-                        $mydata['wp_post_id'] = '-';
-                    }
-                    //$mydata['comments_count'] = $this->CountCommentsForSingleItem($element->id,$token);
                     $mydata['total_comments'] = $this->total_comments_f($wp_post_id);
+                    $mydata['wp_post_id'] = $wp_post_id;
                     $FBPosts[] = $mydata;
 
-                    $i++;
                 }
                 else {
                     $mydata['id'] = (isset($element->id)) ? $element->id : null;
@@ -187,7 +179,6 @@ Class FBCommentsFree{
                     $mydata['picture'] = (isset($element->picture)) ? $element->picture : null;
                     $mydata['message'] = (isset($element->message)) ? $element->message : null;
                     $mydata['wp_post_id'] = "-";
-                    //$mydata['comments_count'] = $this->CountCommentsForSingleItem($element->id,$token);
                     $mydata['total_comments'] = "0";
                     $FBPosts[] = $mydata;
                 }
@@ -216,7 +207,9 @@ Class FBCommentsFree{
             $num = count($obj->data);
             return $num;
         }
-        else return 0;
+        else {
+            return 0;
+        }
     }
     
     
@@ -228,7 +221,7 @@ Class FBCommentsFree{
      * @return type
      */
     public function FBUsername($userid){
-        $file = file_get_contents("http://graph.facebook.com/$userid", true);
+        $file = $this->GetHTTPSData("http://graph.facebook.com/$userid");
         $obj = json_decode($file);
         $username = $obj->username;
         return $username;
@@ -348,7 +341,7 @@ Class FBCommentsFree{
                     $data['created_time'] = $SingleCommentData->created_time;
                     $data['timestamp'] = strtotime($SingleCommentData->created_time);
                     $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
-                    $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
+                    //$data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
                     $data['profile_link'] = 'http://www.facebook.com/'.$SingleCommentData->from->id;
                     $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                     if($data['double_comment_check'] == "1"){
@@ -378,7 +371,7 @@ Class FBCommentsFree{
                         $data['created_time'] = $SingleCommentData->created_time;
                         $data['timestamp'] = strtotime($SingleCommentData->created_time);
                         $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
-                        $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
+                        //$data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
                         $data['profile_link'] = 'http://www.facebook.com/'.$SingleCommentData->from->id;
                         $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                         if($data['double_comment_check'] == "1"){
