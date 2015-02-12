@@ -153,6 +153,12 @@ Class FBCommentsFree{
                 if(isset($element->name)){
                     
                     
+                    // filter facebook redirect link
+                    if(strpos($element->link,"facebook.com/l.php?u=")!== false){
+                        $element->link = preg_replace('/.*?facebook.com\/l.php\?u=(.*?)\&h=.*/i', "$1", $element->link,1);
+                        $element->link = urldecode($element->link);
+                    }
+                    
                     // check post id
                     $wp_post_id = url_to_postid($element->link);
                     if (empty($wp_post_id)) {
