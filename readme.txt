@@ -18,7 +18,7 @@ It gives your site an SEO boost and it makes it look even more alive.
 We also have a **PRO** version with additional features:
 
 * Import comments from regular posts, images or statuses
-* Import from pages, groups or profiles
+* Import from pages, groups or profiles (import from profiles are limited for now because of changes in fb API)
 * Manually connect post with comments
 * Import from older posts
 * Automate the import process (with WP cron)
