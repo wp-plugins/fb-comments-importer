@@ -123,23 +123,11 @@ Class FBCommentsFree{
         return $ret;
     }
     
-    /**
-     * Get items from fb page
-     * @param int $limit
-     * @param string $token
-     * @param string $fields
-     * @return type
-     */
-    public function GetListOfFBPosts($limit,$token,$fields = 'id,message,created_time,picture,type,name,source,link'){
         
+    public function GetFbPageItems($api_url){
         
-        $data = $this->GetHTTPSData("https://graph.facebook.com/$this->pageID/posts/?$token&limit=$limit&fields=$fields");
+        $data = $this->GetHTTPSData($api_url);
         $obj = json_decode($data);
-        $wp_site_url = get_site_url();
-        
-        if(isset($obj->error)){
-            return array("status"=>false,"msg"=>$obj->error->message,"error_code"=>$obj->error->code);
-        }
         
         // parse and prepare data from api
         if($obj->data){
@@ -164,6 +152,7 @@ Class FBCommentsFree{
                     if (empty($wp_post_id)) {
                         $wp_post_id = "-";
                     }
+                    
                     
                     // if id does not exist skip this
                     $mydata['id'] = (isset($element->id)) ? $element->id : null;
@@ -191,11 +180,63 @@ Class FBCommentsFree{
                 
             }
 
-            return $FBPosts;
+            if($obj->paging->next){
+                $next_page_url = $obj->paging->next;
+            } else{
+                $next_page_url = false;
+            }
+            
+            return array("data"=>$FBPosts,"next_url"=>$next_page_url);
         }
         else  {
             return false;
         }
+    }
+    
+    
+    
+    /**
+     * Get items from fb page
+     * @param int $limit
+     * @param string $token
+     * @param string $fields
+     * @return type
+     */
+    public function GetListOfFBPosts($limit,$token,$fields = 'id,message,created_time,picture,type,name,source,link'){
+        
+        
+        // set number of pages
+        if(!$limit){
+            $number_of_pages = 1;
+        } else {
+            $number_of_pages = round($limit/25);
+            if($number_of_pages < 1){
+                $number_of_pages = 1;
+            }
+        }
+        // generate first url
+        $page_url = "https://graph.facebook.com/$this->pageID/feed?$token&limit=25&fields=$fields";
+        // set page counter
+        $i = 0;
+        $Items = array();
+        do{
+            if($i == $number_of_pages){
+                break;
+            }
+            
+            $page_url_enter = ($FBPage['next_url']) ? $FBPage['next_url'] : $page_url;
+            $FBPage = $this->getFBPageItems($page_url_enter);
+            // check is it array
+            if(is_array($FBPage['data']) && is_array($Items)){
+                $Items = array_merge($Items,$FBPage['data']);
+            } else{
+                break;
+            }
+            $i++;
+        } while($FBPage['next_url']);
+
+        
+        return $Items;
     }
     
     

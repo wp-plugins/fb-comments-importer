@@ -4,7 +4,7 @@ Donate link:
 Tags: fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,10 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 2. FB Comments Importer PRO
 
 == Changelog ==
+
+= 1.6.2 2015-03-09 =
+* Few interface changes
+* From version 1.6.2 plugin is capable to fetch unlimited number of posts from facebook page
 
 = 1.6.1 2015-02-12 =
 * fixed bug related with short links auto follow

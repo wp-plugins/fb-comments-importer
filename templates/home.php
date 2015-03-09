@@ -1,3 +1,4 @@
+
 <div class="postbox">
     <div class="inside">
         <form action="#" method="POST">
@@ -5,11 +6,11 @@
         </form>
     </div>
 </div>
-
 <h2><?php echo $wp_site_url;?></h2>
-
 <h3>Latest Posts:</h3>
 <a class="button button-primary button" href="javascript:void(0);" onclick="ShowHideRows();">Show / Hide unavailable posts</a>
+<br>
+Notice: Plugin will automatically connect only facebook entries that contains link to some of your wordpress posts. 
 <table class="widefat" style="margin-top: 10px;">
     <thead>
         <tr>
