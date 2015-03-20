@@ -39,8 +39,10 @@ Notice: Plugin will automatically connect only facebook entries that contains li
             
             ?>
             <tr <?php echo $myclass;?>>
-                <td><b>(<?php echo $element['type'];?>)</b> <?php echo $element['name'];?></td>
-                <td><a href="<?php echo $element['link'];?>" target="_blank"><?php echo substr($element['link'], 0, 30);?><?php if(strlen($element['link'])>30){echo "...";}?></a></td>
+                <td>
+                    <?php echo (isset($element['name'])) ? $element['name'] : substr($element['message'],0,50);?>
+                </td>
+                <td><a href="<?php echo $element['link'];?>" target="_blank"><?php echo substr($element['link'], 0, 90);?><?php if(strlen($element['link'])>30){echo "...";}?></a></td>
                 <td><?php echo $element['type'];?></td>
                 <td>
                     <?php

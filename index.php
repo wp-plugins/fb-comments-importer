@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: FB Comments Importer
+Plugin Name: Facebook Comments Importer
 Plugin URI: http://wp-resources.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.6.2
+Version: 1.7
 Author: Ivan M
 */
 
@@ -48,17 +48,19 @@ function fbsync_comments_plugin_options_f() {
         $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
         if($action == "save_data"){
             
-            $pageID = $_POST['pageID'];
-            $appID = $_POST['appID'];
-            $appSecret = $_POST['appSecret'];
-            $commentsStatus = $_POST['comments_status'];
-            $followRedirects = $_POST['follow_redirects'];
+            $pageID = filter_input(INPUT_POST, 'pageID',FILTER_SANITIZE_SPECIAL_CHARS);
+            $appID = filter_input(INPUT_POST, 'appID',FILTER_SANITIZE_SPECIAL_CHARS);
+            $appSecret = filter_input(INPUT_POST, 'appSecret',FILTER_SANITIZE_SPECIAL_CHARS);
+            $commentsStatus = filter_input(INPUT_POST, 'comments_status',FILTER_SANITIZE_SPECIAL_CHARS);
+            $followRedirects = filter_input(INPUT_POST, 'follow_redirects',FILTER_SANITIZE_SPECIAL_CHARS);
+            $WSBaseURL = filter_input(INPUT_POST,'ws_base_url');
             
             update_option('fbsync_comments_pageID', $pageID);
             update_option('fbsync_comments_appID', $appID);
             update_option('fbsync_comments_appSecret', $appSecret);
             update_option('commentes_importer_follow_redirects', $followRedirects);
             update_option('commentes_importer_comments_status', $commentsStatus);
+            update_option('commentes_importer_website_base_url', $WSBaseURL);
             
             echo "Settings are saved!";
             ?><meta http-equiv="REFRESH" content="2;url=?page=fbsync_comments_free"><?php
@@ -75,7 +77,13 @@ function fbsync_comments_plugin_options_f() {
             $appSecret = get_option('fbsync_comments_appSecret');
             $comments_status_value = get_option('commentes_importer_comments_status');
             $follow_redirects = get_option('commentes_importer_follow_redirects');
+            $website_base_url = get_option('commentes_importer_website_base_url');
+            
+            
+            if(!$website_base_url){
             $wp_site_url = get_site_url();
+                update_option('commentes_importer_website_base_url', $wp_site_url);
+            }
             
             // show update form, and buy now message
             include("update_form.php");

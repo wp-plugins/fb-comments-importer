@@ -26,6 +26,13 @@ if(!function_exists('curl_version')){
                                 <td><input name="appSecret" type="text" value="<?php echo $appSecret; ?>" class="regular-text"></td>
                             </tr>
                             <tr>
+                                <td>Website base URL:</td>
+                                <td>
+                                    <input name="ws_base_url" type="text" value="<?php echo $website_base_url;?>" class="regular-text"><br>
+                                    <small>Please do not change this option if you are not sure what you are doing.</small>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Comments status</td>
                                 <td>
                                     <input type="radio" <?php if($comments_status_value==1){echo "checked";}?> name="comments_status" value="1"> Approved 

@@ -6,6 +6,7 @@ Class FBCommentsFree{
         $this->pageID = get_option('fbsync_comments_pageID');
         $this->appSecret = get_option('fbsync_comments_appSecret');
         $this->comments_status = get_option('commentes_importer_comments_status');
+        $this->WPBaseURL = get_option('commentes_importer_website_base_url');
     }
     
     
@@ -27,7 +28,7 @@ Class FBCommentsFree{
             if ($ag_part[0] == 'facebook-comment-importer-plugin' OR $id_or_email->comment_agent == 'facebook-comment-importer plugin') {
                 $alt = '';
                 $fb_url = $id_or_email->comment_author_url;
-                $fb_array = split("/", $fb_url);
+                $fb_array = explode("/", $fb_url);
                 $fb_id = $fb_array[count($fb_array) - 1];
                 if (strlen($fb_id) > 1) {
                     $img = "http://graph.facebook.com/" . $fb_id . "/picture";
@@ -37,6 +38,19 @@ Class FBCommentsFree{
         }
         return $avatar;
     }
+    
+    /**
+     * Explode string on multiple roles
+     * @param type $delimiters
+     * @param type $string
+     * @return type
+     */
+    public function multiexplode ($delimiters,$string) {
+    
+        $ready = str_replace($delimiters, $delimiters[0], $string);
+        $launch = explode($delimiters[0], $ready);
+        return  $launch;
+    } 
     
     /**
      * Curl get content - https enabled
@@ -138,7 +152,7 @@ Class FBCommentsFree{
                 // set post ID to null
                 $wp_post_id = null;
 
-                if(isset($element->name)){
+                if(isset($element->name) || isset($element->message)){
                     
                     
                     // filter facebook redirect link
@@ -153,6 +167,26 @@ Class FBCommentsFree{
                         $wp_post_id = "-";
                     }
                     
+                    // connect post with url inside message
+                    $post_message = (isset($element->message)) ? $element->message : null;
+                    $link_in_status = explode("http://", $post_message);
+                    
+                    $get_only_link = (isset($link_in_status[1])) ? $this->multiexplode(array(" ","\n","\t"), $link_in_status[1]) : null;
+                    if(isset($get_only_link[0])){
+                        
+                        // is there link to my site, or some other site
+                        $full_link_to_site = "http://".$get_only_link[0];
+                        
+                        // compare link with site url
+                        if(strpos($full_link_to_site,$this->WPBaseURL)!== false && $full_link_to_site!="http://"){
+                            $wp_post_id = url_to_postid( $full_link_to_site );
+                            if(!$wp_post_id){
+                                $wp_post_id = "-";
+                            }
+                        }
+                    }
+                    
+                                        
                     
                     // if id does not exist skip this
                     $mydata['id'] = (isset($element->id)) ? $element->id : null;
@@ -218,13 +252,14 @@ Class FBCommentsFree{
         $page_url = "https://graph.facebook.com/$this->pageID/feed?$token&limit=25&fields=$fields";
         // set page counter
         $i = 0;
+        $FBPage = null;
         $Items = array();
         do{
             if($i == $number_of_pages){
                 break;
             }
             
-            $page_url_enter = ($FBPage['next_url']) ? $FBPage['next_url'] : $page_url;
+            $page_url_enter = (filter_var($FBPage['next_url'])) ? filter_var($FBPage['next_url']) : $page_url;
             $FBPage = $this->getFBPageItems($page_url_enter);
             // check is it array
             if(is_array($FBPage['data']) && is_array($Items)){
@@ -366,9 +401,8 @@ Class FBCommentsFree{
      */
     public function GetFBComments($id,$post_id){
         $id = trim($id);
-        //$token = $this->GenerateAccessToken();        
-        
-        $file = $this->GetHTTPSData('https://graph.facebook.com/'.$id.'/comments?'.$token.'limit=1000&fields=id,from,message,created_time');
+        $token = $this->GenerateAccessToken();        
+        $file = $this->GetHTTPSData('https://graph.facebook.com/'.$id.'/comments?'.$token.'&limit=1000&fields=id,from,message,created_time');
         $FBobject = json_decode($file);
         
         if($FBobject->data){
