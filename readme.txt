@@ -4,26 +4,41 @@ Donate link:
 Tags: comments importer, fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 1.7
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Import Facebook comments into Wordpress.
+Import Facebook comments into Wordpress database.
 
 == Description ==
 
-FB Comments Importer is a simple plugin that lets you import comments from your Facebook page directly into a Wordpress comments system.
-It gives your site an SEO boost and it makes it look even more alive.
+Facebook comments importer is used to import comments from Facebook pages, groups and user profiles directly in the Wordpress database. 
+Apart from just importing the comments, our plugin will also pull and display profile pictures as avatars and every comment will have the 
+real authors name to it. The comments are displayed in the same format as they appear on Facebook, which means that nested comments are 
+fully supported and the plugin will also show replies to comments made by users. The main advantage of importing comments into the Wordpress 
+database is the fact that they become visible to search engines and this procedure has a positive effect on your websites SEO. Besides that, 
+your website will look much more active and also encourage other users to get involved in discussions.
+
 
 We also have a **PRO** version with additional features:
 
-* Import comments from regular posts, images or statuses
-* Import from pages, groups or profiles (import from profiles are limited for now because of changes in fb API)
+* Import comments from regular posts, videos, images or statuses
+* Import from pages, groups or profiles
 * Manually connect post with comments
-* Import from older posts
+* Importing comments from very old posts, no limits
 * Automate the import process (with WP cron)
 * Turn the cron on/off or restart it
+* Modification of the main URL (useful in cases of changing the domain)
 * Faster and more efficient support
+
+The free version offers just basic functionality, like the manual import of comments from a Facebook group or page if the post was published 
+as a link to some of the articles on your website. 
+
+The PRO version has **no limitations**, it is possible to import comments from almost everything, like from pictures, videos, links through to 
+ordinary text statuses. The PRO version will in various ways automatically try to connect Facebook posts with some of the articles on your 
+website. Furthermore, the PRO version is doing everything automatically, so there is no need for manual comment importing, the plugin will 
+automatically start importing comments every 10 minutes and do everything on it’s own. Besides that, you will also have the possibility of 
+importing comments from two different Facebook groups or pages + the import from your user wall.
 
 For any issues with the plugin, please open a support ticket and we will fix it ASAP!
 
@@ -42,6 +57,11 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 2. FB Comments Importer PRO
 
 == Changelog ==
+
+= 1.7.1 2015-03-27 =
+* Documentation and readme file updated
+* Fixed bug related with comments replies import 
+* Code cleaned-up
 
 = 1.7 2015-03-20 =
 * NEW FEATURE: Import comments from facebook text statuses (with link to your site)

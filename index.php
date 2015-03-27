@@ -3,7 +3,7 @@
 Plugin Name: Facebook Comments Importer
 Plugin URI: http://wp-resources.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.7
+Version: 1.7.1
 Author: Ivan M
 */
 
@@ -26,12 +26,18 @@ function comimp_get_avatar_free($avatar, $id_or_email, $size = '50') {
 
 function fbsync_comments_free_plugin_menu() {
     add_menu_page(__('FB Comments Importer', 'fbsync_comments_options_f'), __('FB Comments Importer', 'fbsync_comments_options_f'), 'manage_options', 'fbsync_comments_free', 'fbsync_comments_plugin_options_f');
+    add_submenu_page("fbsync_comments_free", "Pro Version", "Pro Version", 'manage_options', "fbsync_comments_about_pro", "fbsync_comments_about_pro_function");
+
     wp_register_script( 'FBScriptReadyFree', plugins_url('js/script.js?v=2', __FILE__) );
     wp_enqueue_script( 'FBScriptReadyFree' );
     wp_register_style( 'FBmyPluginStylesheet', plugins_url('css/css.css?v=2', __FILE__) );
     wp_enqueue_style( 'FBmyPluginStylesheet' );
 }
 
+// about pro version page
+function fbsync_comments_about_pro_function(){
+    include("templates/about_pro.php");
+}
 
 
 // admin page
