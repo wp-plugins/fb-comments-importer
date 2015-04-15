@@ -402,7 +402,7 @@ Class FBCommentsFree{
     public function GetFBComments($id,$post_id){
         $id = trim($id);
         $token = $this->GenerateAccessToken();        
-        $file = $this->GetHTTPSData('https://graph.facebook.com/'.$id.'/comments?'.$token.'&limit=1000&fields=id,from,message,created_time,comments.limit(1000){id,from,message,created_time}');
+        $file = $this->GetHTTPSData('https://graph.facebook.com/v2.3/'.$id.'/comments?'.$token.'&limit=10000&fields=id,from,message,created_time,comments.limit(10000){id,from,message,created_time}');
         $FBobject = json_decode($file);
         
         if($FBobject->data){
@@ -423,12 +423,13 @@ Class FBCommentsFree{
                     $data['timestamp'] = strtotime($SingleCommentData->created_time);
                     $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
                     $data['profile_link'] = 'http://www.facebook.com/'.$SingleCommentData->from->id;
+
                     $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                     if($data['double_comment_check'] == "1"){
                         $data['current_comment_id'] = $this->GetTopCommentID($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id);
                     }
                     if(isset($SingleCommentData->comments->data)){
-                        $data['replies'] = $this->GetCommentsRepliesFromObject($SingleCommentData->comments->data,$post_id,$all_comments_for_post);
+                    $data['replies'] = $this->GetCommentsRepliesFromObject($SingleCommentData->comments->data,$post_id,$all_comments_for_post);
                     } else {
                         $data['replies'] = null;
                     }
@@ -439,42 +440,6 @@ Class FBCommentsFree{
                 }
             }
 
-
-            // get comments from next page (max limit is 2000)
-            if($FBobject->paging->next){
-
-                $file_next = $this->GetHTTPSData($FBobject->paging->next);
-                $FBobject_next = json_decode($file_next);
-                $FBCommentsArray_next = array_reverse($FBobject_next->data);
-
-                if($FBCommentsArray_next){
-                    foreach($FBCommentsArray_next as $SingleCommentData){
-
-                        $data['comment_id'] = $SingleCommentData->id;
-                        $data['from_name'] = $SingleCommentData->from->name;
-                        $data['from_id'] = $SingleCommentData->from->id;
-                        $data['message'] = $SingleCommentData->message;
-                        $data['created_time'] = $SingleCommentData->created_time;
-                        $data['timestamp'] = strtotime($SingleCommentData->created_time);
-                        $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
-                        $data['profile_link'] = 'http://www.facebook.com/'.$SingleCommentData->from->id;
-                        $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
-                        if($data['double_comment_check'] == "1"){
-                            $data['current_comment_id'] = $this->GetTopCommentID($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id);
-                        }
-                        if(isset($SingleCommentData->comments->data)){
-                        $data['replies'] = $this->GetCommentsRepliesFromObject($SingleCommentData->comments->data,$post_id,$all_comments_for_post);
-                        } else {
-                            $data['replies'] = null;
-                        }
-                        $Comments[] = $data;
-                        $SingleCommentData->comments = false;
-                        unset($SingleCommentData->comments);
-                        unset($SingleCommentData);
-                    }
-                }
-
-            }
         }
         // return complete array with replays
         return $Comments;
@@ -496,7 +461,6 @@ Class FBCommentsFree{
                 $data['created_time'] = $SingleCommentData->created_time;
                 $data['timestamp'] = strtotime($SingleCommentData->created_time);
                 $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
-                $data['fb_username'] = $this->FBUsername($SingleCommentData->from->id);
                 $data['profile_link'] = 'http://www.facebook.com/'.$SingleCommentData->from->id;
                 $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                 $Comments[] = $data;
