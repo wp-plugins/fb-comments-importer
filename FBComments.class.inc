@@ -402,7 +402,7 @@ Class FBCommentsFree{
     public function GetFBComments($id,$post_id){
         $id = trim($id);
         $token = $this->GenerateAccessToken();        
-        $file = $this->GetHTTPSData('https://graph.facebook.com/v2.3/'.$id.'/comments?'.$token.'&limit=10000&fields=id,from,message,created_time,comments.limit(10000){id,from,message,created_time}');
+        $file = $this->GetHTTPSData('https://graph.facebook.com/v2.3/'.$id.'/comments?'.$token.'&limit=10000&fields=id,from,message,created_time,attachment,comments.limit(10000){id,from,message,created_time}');
         $FBobject = json_decode($file);
         
         if($FBobject->data){
@@ -424,6 +424,10 @@ Class FBCommentsFree{
                     $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
                     $data['profile_link'] = 'http://www.facebook.com/'.$SingleCommentData->from->id;
 
+                    if(isset($SingleCommentData->attachment->media->image->src) && isset($SingleCommentData->attachment->url)){
+                        $data['image'] = serialize(array("image"=>$SingleCommentData->attachment->media->image->src,"url"=>$SingleCommentData->attachment->url));
+                    }
+                    
                     $data['double_comment_check'] = $this->IsDoubleComment($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id,$SingleCommentData->message,$all_comments_for_post);
                     if($data['double_comment_check'] == "1"){
                         $data['current_comment_id'] = $this->GetTopCommentID($post_id, 'facebook-comment-importer-plugin__'.$SingleCommentData->id);
@@ -523,6 +527,10 @@ Class FBCommentsFree{
                         'comment_approved' => $comments_status_value,
                     );
                     $parent_comment = wp_insert_comment($data);
+                    // add comment meta for images
+                    if(isset($comment['image'])){
+                        add_comment_meta( $parent_comment, 'fb_comments_importer_comment_image', $comment['image'] );
+                    }
                     $i++;
                 }
                 else {

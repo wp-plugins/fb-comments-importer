@@ -3,7 +3,7 @@
 Plugin Name: Facebook Comments Importer
 Plugin URI: http://wp-resources.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.7.2
+Version: 1.7.3
 Author: Ivan M
 */
 
@@ -75,6 +75,23 @@ function fbsync_comments_plugin_options_f() {
         else if($action == "import"){
             include("manual_import.php");
         }
+        else if(filter_input(INPUT_GET, 'action') == "import_test"){
+            
+            $fbid = filter_input(INPUT_GET, 'fbid');
+            $post_id = filter_input(INPUT_GET, 'post_id');
+
+            // import comments from fb page, token not required here
+            $FBCAPI = new FBCommentsFree();
+            $GetComments = $FBCAPI->GetFBComments($fbid,$post_id);
+            echo "<pre>";
+            print_r($GetComments);
+            echo "</pre>";
+
+        }
+	else if(filter_input(INPUT_GET, 'action') == "test_filters"){
+		$filter = filter_input(INPUT_GET, 'filter');
+		print_filters_for( $filter );
+	}
         // Show comments
         else {
             // update settings form template
@@ -183,3 +200,19 @@ function fbcomments_importer_filter_shortner($url) {
     
 }
 add_filter('url_to_postid', 'fbcomments_importer_filter_shortner', 0);
+
+
+// add images to comments
+function fb_comments_importer_preprocess_comment($commentdata) {
+
+    foreach ($commentdata as $key => $one_comment) {
+
+        $meta_values = get_comment_meta($one_comment->comment_ID, 'fb_comments_importer_comment_image', true);
+        $meta_values = unserialize($meta_values);
+        $commentdata[$key]->comment_content .= '<br><a target="_blank" href="'.$meta_values['url'].'"><img src="'.$meta_values['image'].'"></a>';
+    }
+
+    return $commentdata;
+}
+
+add_filter( 'comments_array' , 'fb_comments_importer_preprocess_comment'); 
