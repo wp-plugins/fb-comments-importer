@@ -438,6 +438,7 @@ Class FBCommentsFree{
                         $data['replies'] = null;
                     }
                     $Comments[] = $data;
+                    unset($data);
                     $SingleCommentData->comments = false;
                     unset($SingleCommentData->comments);
                     unset($SingleCommentData);
