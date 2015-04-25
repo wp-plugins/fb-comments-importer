@@ -4,7 +4,7 @@ Donate link:
 Tags: comments importer, fb comments, facebook, comments, fb comments import, facebook comments, facebook comments import, discussion
 Requires at least: 3.0
 Tested up to: 4.2
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,9 @@ For any issues with the plugin, please open a support ticket and we will fix it 
 2. FB Comments Importer PRO
 
 == Changelog ==
+
+=1.7.5 2015-04-25 =
+* Another bug related with importing images inside comments is fixed
 
 = 1.7.4 2015-04-22 =
 * Important update: In last version (1.7.3) was small bug related with images inside comments, it is fixed in this version.
