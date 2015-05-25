@@ -1,11 +1,11 @@
 
-<div class="postbox">
-    <div class="inside">
-        <form action="#" method="POST">
-            Limit: <input type="text" name="limit" value="<?php echo $limit;?>"> <input type="submit" value="Show">
-        </form>
-    </div>
+
+<div class="infodiv_fbcommentsimp padding_5px">
+    <form action="#" method="POST">
+    Limit: <input type="text" name="limit" value="<?php echo $limit;?>"> <input type="submit" value="Show">  (<b>Note:</b> Number of results can be smaller than submitted limit. Plugin will show only results from which we can import comments)
+    </form>
 </div>
+
 <h2><?php echo $wp_site_url;?></h2>
 <h3>Latest Posts:</h3>
 <a class="button button-primary button" href="javascript:void(0);" onclick="ShowHideRows();">Show / Hide unavailable posts</a>
@@ -88,3 +88,5 @@ Notice: Plugin will automatically connect only facebook entries that contains li
     ?>
     </tbody>
 </table>
+
+</div>

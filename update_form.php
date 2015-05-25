@@ -5,12 +5,13 @@ if(!function_exists('curl_version')){
     echo '</div>';
 } 
 ?>
-<div class="postbox">
-    <div class="inside">
+
+<div class="wrap">
+    <div class="infodiv_fbcommentsimp">
+        <h2>Configuration: </h2>
         <table width="100%">
             <tr>
                 <td width="50%" valign="top">
-                    <h2>Configuration:</h2>
                     <form action ="?page=fbsync_comments_free&action=save_data" method="POST">
                         <table>
                             <tr width="150">
@@ -35,15 +36,15 @@ if(!function_exists('curl_version')){
                             <tr>
                                 <td>Comments status</td>
                                 <td>
-                                    <input type="radio" <?php if($comments_status_value==1){echo "checked";}?> name="comments_status" value="1"> Approved 
-                                    <input type="radio" <?php if($comments_status_value==0){echo "checked";}?> name="comments_status" value="0"> Not approved
+                                    <input type="radio" <?php if($comments_status_value==1){echo "checked";}?> name="comments_status" value="1" id="comments_status_1"> <label for="comments_status_1">Approved </label>
+                                    <input type="radio" <?php if($comments_status_value==0){echo "checked";}?> name="comments_status" value="0" id="comments_status_0"> <label for="comments_status_0">Not approved</label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>follow url shortener redirects</td>
                                 <td>
-                                    <input type="radio" <?php if($follow_redirects==1){echo "checked";}?> name="follow_redirects" value="1"> Yes 
-                                    <input type="radio" <?php if($follow_redirects==0){echo "checked";}?> name="follow_redirects" value="0"> No
+                                    <input type="radio" <?php if($follow_redirects==1){echo "checked";}?> name="follow_redirects" id="follow_redirects_yes" value="1"> <label for="follow_redirects_yes">Yes</label> 
+                                    <input type="radio" <?php if($follow_redirects==0){echo "checked";}?> name="follow_redirects" id="follow_redirects_no" value="0"> <label for="follow_redirects_no">No</label>
                                 </td>
                             </tr>
                             <tr>
@@ -54,9 +55,11 @@ if(!function_exists('curl_version')){
                     </form>
                 </td>
                 <td valign="top">
-                    <a href="http://wp-resources.com/facebook-comments-importer/" target="_blank"><img src="<?php echo plugin_dir_url( __FILE__ );?>advert.png"></a>
+                    <a href="http://wp-resources.com/facebook-comments-importer/" target="_blank"><img src="<?php echo plugin_dir_url( __FILE__ );?>advert_3.png"></a>
                 </td>
             </tr>
         </table>
+    
+    
     </div>
-</div>
+    
