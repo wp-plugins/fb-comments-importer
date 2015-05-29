@@ -417,7 +417,7 @@ Class FBCommentsFree{
                     $data['comment_id'] = $SingleCommentData->id;
                     $data['from_name'] = $SingleCommentData->from->name;
                     $data['from_id'] = $SingleCommentData->from->id;
-                    $data['message'] = $SingleCommentData->message;
+                    $data['message'] = utf8_encode($SingleCommentData->message);
                     $data['created_time'] = $SingleCommentData->created_time;
                     $data['timestamp'] = strtotime($SingleCommentData->created_time);
                     $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
@@ -461,7 +461,7 @@ Class FBCommentsFree{
                 $data['comment_id'] = $SingleCommentData->id;
                 $data['from_name'] = $SingleCommentData->from->name;
                 $data['from_id'] = $SingleCommentData->from->id;
-                $data['message'] = $SingleCommentData->message;
+                $data['message'] = utf8_encode($SingleCommentData->message);
                 $data['created_time'] = $SingleCommentData->created_time;
                 $data['timestamp'] = strtotime($SingleCommentData->created_time);
                 $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
