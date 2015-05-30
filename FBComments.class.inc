@@ -392,6 +392,14 @@ Class FBCommentsFree{
 	}
     }
     
+    public function replace4byte($string) {
+        return preg_replace('%(?:
+              \xF0[\x90-\xBF][\x80-\xBF]{2}      # planes 1-3
+            | [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
+            | \xF4[\x80-\x8F][\x80-\xBF]{2}      # plane 16
+        )%xs', '', $string);    
+    }
+    
     /**
      * get comments and replies for single post
      * @param type $id
@@ -417,7 +425,7 @@ Class FBCommentsFree{
                     $data['comment_id'] = $SingleCommentData->id;
                     $data['from_name'] = $SingleCommentData->from->name;
                     $data['from_id'] = $SingleCommentData->from->id;
-                    $data['message'] = utf8_encode($SingleCommentData->message);
+                    $data['message'] = $this->replace4byte($SingleCommentData->message);
                     $data['created_time'] = $SingleCommentData->created_time;
                     $data['timestamp'] = strtotime($SingleCommentData->created_time);
                     $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
@@ -461,7 +469,7 @@ Class FBCommentsFree{
                 $data['comment_id'] = $SingleCommentData->id;
                 $data['from_name'] = $SingleCommentData->from->name;
                 $data['from_id'] = $SingleCommentData->from->id;
-                $data['message'] = utf8_encode($SingleCommentData->message);
+                $data['message'] = $this->replace4byte($SingleCommentData->message);
                 $data['created_time'] = $SingleCommentData->created_time;
                 $data['timestamp'] = strtotime($SingleCommentData->created_time);
                 $data['wp_date'] = $this->GenerateTimeFromString($SingleCommentData->created_time);
