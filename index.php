@@ -97,7 +97,7 @@ function fbsync_comments_plugin_options_f() {
         ?>
         <div class="wrap">
             <div id="icon-edit" class="icon32"><br></div><h2>Import Facebook Comments</h2><br><br>
-        <?
+        <?php
         // check permissions
 	if ( !current_user_can( 'manage_options' ) )  {
 		wp_die( __( 'Access denied.' ) );
@@ -114,7 +114,7 @@ function fbsync_comments_plugin_options_f() {
             update_option('fbsync_comments_appSecret', $appSecret);
             
             echo "Settings are saved!";
-            ?><meta http-equiv="REFRESH" content="2;url=?page=fbsync_comments_free"><?
+            ?><meta http-equiv="REFRESH" content="2;url=?page=fbsync_comments_free"><?php
         }
         // on uvezi click
         else if($_GET['action']=="import"){
@@ -161,7 +161,7 @@ function fbsync_comments_plugin_options_f() {
                     </tr>
                 </thead>
                 <tbody>
-            <?
+            <?php
             foreach ($obj->data as $element) {
                 // get data from facebook api pbject
                 $link = $element->link;
@@ -188,21 +188,21 @@ function fbsync_comments_plugin_options_f() {
                         ?>
                         <tr>
                             <td><b>(<?=$type;?>)</b> <?=$name;?></td>
-                            <td><a href="<?=$link;?>" target="_blank"><? echo substr($link, 0, 50);?></a></td>
+                            <td><a href="<?=$link;?>" target="_blank"><?php echo substr($link, 0, 50);?></a></td>
                             <td>Article</td>
                             <td><?=$comments_count;?></td>
                             <td><?=$ukupno_komentara;?></td>
                             <td><a href="?page=fbsync_comments_free&action=import&fbid=<?=$id;?>&post_id=<?=$wp_post_id;?>">Import Now!</a></td>
                             <td>Yes</td>
                         </tr>
-                        <?
+                        <?php
                     }
                 }
             }
             ?>
                 </tbody>
             </table>  
-            <?
+            <?php
              
         }
         
