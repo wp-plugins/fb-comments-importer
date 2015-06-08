@@ -48,6 +48,13 @@ if(!function_exists('curl_version')){
                                 </td>
                             </tr>
                             <tr>
+                                <td>Disable images in imported comments</td>
+                                <td>
+                                    <input type="radio" <?php if($disable_images==1){echo "checked";}?> name="disable_images" id="disable_images_yes" value="1"> <label for="disable_images_yes">Yes</label> 
+                                    <input type="radio" <?php if($disable_images==0){echo "checked";}?> name="disable_images" id="disable_images_no" value="0"> <label for="disable_images_no">No</label>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td></td>
                                 <td><input type="submit" name="submit" value="Save"></td>
                             </tr>

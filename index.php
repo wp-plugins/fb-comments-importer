@@ -3,7 +3,7 @@
 Plugin Name: Facebook Comments Importer
 Plugin URI: http://wp-resources.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.7.8
+Version: 1.7.9
 Author: Ivan M
 */
 
@@ -59,12 +59,14 @@ function fbsync_comments_plugin_options_f() {
             $appSecret = filter_input(INPUT_POST, 'appSecret',FILTER_SANITIZE_SPECIAL_CHARS);
             $commentsStatus = filter_input(INPUT_POST, 'comments_status',FILTER_SANITIZE_SPECIAL_CHARS);
             $followRedirects = filter_input(INPUT_POST, 'follow_redirects',FILTER_SANITIZE_SPECIAL_CHARS);
+            $disable_images = filter_input(INPUT_POST, 'disable_images',FILTER_SANITIZE_SPECIAL_CHARS);
             $WSBaseURL = filter_input(INPUT_POST,'ws_base_url');
             
             update_option('fbsync_comments_pageID', $pageID);
             update_option('fbsync_comments_appID', $appID);
             update_option('fbsync_comments_appSecret', $appSecret);
             update_option('commentes_importer_follow_redirects', $followRedirects);
+            update_option('commentes_importer_disable_images', $disable_images);
             update_option('commentes_importer_comments_status', $commentsStatus);
             update_option('commentes_importer_website_base_url', $WSBaseURL);
             
@@ -100,6 +102,7 @@ function fbsync_comments_plugin_options_f() {
             $appSecret = get_option('fbsync_comments_appSecret');
             $comments_status_value = get_option('commentes_importer_comments_status');
             $follow_redirects = get_option('commentes_importer_follow_redirects');
+            $disable_images = get_option('commentes_importer_disable_images');
             $website_base_url = get_option('commentes_importer_website_base_url');
             
             
@@ -204,16 +207,18 @@ add_filter('url_to_postid', 'fbcomments_importer_filter_shortner', 0);
 if (!function_exists('fb_comments_importer_pro_preprocess_comment')) {
     // add images to comments
     function fb_comments_importer_preprocess_comment($commentdata) {
+        // get disable images option
+        $disable_images = get_option('commentes_importer_disable_images');
+        if($disable_images != 1){
+            foreach ($commentdata as $key => $one_comment) {
 
-        foreach ($commentdata as $key => $one_comment) {
-
-            $meta_values = get_comment_meta($one_comment->comment_ID, 'fb_comments_importer_comment_image', true);
-            $meta_values = unserialize($meta_values);
-            if($meta_values){
-                $commentdata[$key]->comment_content .= '<br><a target="_blank" href="'.$meta_values['url'].'"><img src="'.$meta_values['image'].'"></a>';
+                $meta_values = get_comment_meta($one_comment->comment_ID, 'fb_comments_importer_comment_image', true);
+                $meta_values = unserialize($meta_values);
+                if($meta_values){
+                    $commentdata[$key]->comment_content .= '<br><a target="_blank" href="'.$meta_values['url'].'"><img src="'.$meta_values['image'].'"></a>';
+                }
             }
         }
-
         return $commentdata;
     }
     add_filter( 'comments_array' , 'fb_comments_importer_preprocess_comment'); 
