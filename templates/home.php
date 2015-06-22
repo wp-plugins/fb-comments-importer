@@ -48,12 +48,12 @@ Notice: Plugin will automatically connect only facebook entries that contains li
                     <?php
                     if($element['wp_post_id'] !="-"){
                     ?>
-                    <a href="javascript:void(0);" onclick="CheckComNumFree('<?php echo $element['id'];?>');">Check</a> <span id="countcomm_<?php echo $element['id'];?>"> </span>
+                    <a href="javascript:void(0);" onclick="CheckComNumFree('<?php echo $element['id'];?>','<?php echo $token;?>');">Check</a> <span id="countcomm_<?php echo $element['id'];?>"> </span>
                     <?php
                     }
                     else{
                     ?>
-                    <a href="javascript:void(0);" onclick="CheckComNumFree('<?php echo $element['id'];?>');">Check</a> <span id="countcomm_<?php echo $element['id'];?>"> </span>
+                    <a href="javascript:void(0);" onclick="CheckComNumFree('<?php echo $element['id'];?>','<?php echo $token;?>'');">Check</a> <span id="countcomm_<?php echo $element['id'];?>"> </span>
                     <?php 
                     }
                     ?>

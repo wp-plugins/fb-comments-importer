@@ -1,7 +1,7 @@
-function CheckComNumFree(id){
+function CheckComNumFree(id,token){
     jQuery.ajax({
         type: "GET",
-        url: "https://graph.facebook.com/"+id+"/comments?limit=5000&fields=id",
+        url: "https://graph.facebook.com/"+id+"/comments?limit=5000&fields=id&"+token,
         async: true,
         success: function(resp) {
             
