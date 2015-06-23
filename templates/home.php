@@ -53,7 +53,7 @@ Notice: Plugin will automatically connect only facebook entries that contains li
                     }
                     else{
                     ?>
-                    <a href="javascript:void(0);" onclick="CheckComNumFree('<?php echo $element['id'];?>','<?php echo $token;?>'');">Check</a> <span id="countcomm_<?php echo $element['id'];?>"> </span>
+                    <a href="javascript:void(0);" onclick="CheckComNumFree('<?php echo $element['id'];?>','<?php echo $token;?>');">Check</a> <span id="countcomm_<?php echo $element['id'];?>"> </span>
                     <?php 
                     }
                     ?>
