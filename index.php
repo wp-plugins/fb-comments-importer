@@ -3,7 +3,7 @@
 Plugin Name: Facebook Comments Importer
 Plugin URI: http://wp-resources.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.8.1
+Version: 1.9
 Author: Ivan M
 */
 
@@ -26,6 +26,7 @@ function comimp_get_avatar_free($avatar, $id_or_email, $size = '50') {
 
 function fbsync_comments_free_plugin_menu() {
     add_menu_page(__('FB Comments Importer', 'fbsync_comments_options_f'), __('FB Comments Importer', 'fbsync_comments_options_f'), 'manage_options', 'fbsync_comments_free', 'fbsync_comments_plugin_options_f');
+    add_submenu_page("fbsync_comments_free", "All Facebook posts", "All Facebook posts *BETA", 'manage_options', "fbsync_comments_free_all_posts", "fbsync_comments_free_all_posts_function");
     add_submenu_page("fbsync_comments_free", "Pro Version", "Pro Version", 'manage_options', "fbsync_comments_about_pro", "fbsync_comments_about_pro_function");
 
     wp_register_script( 'FBScriptReadyFree', plugins_url('js/script.js?v=2', __FILE__) );
@@ -140,6 +141,77 @@ function fbsync_comments_plugin_options_f() {
         
 }
 
+
+
+// fetch all posts from facebook, and allow manuall import
+function fbsync_comments_free_all_posts_function(){
+
+    // config data
+    $fb_page_id = get_option('fbsync_comments_pageID');
+    $website_base_url = get_option('commentes_importer_website_base_url');
+    $follow_redirects = get_option('commentes_importer_follow_redirects');
+
+    if(!$website_base_url){
+        $wp_site_url = get_site_url();
+        update_option('commentes_importer_website_base_url', $wp_site_url);
+    }
+
+     // new FB comments object, and generate access token
+    $FBCommentsFree = new FBCommentsFree();
+    $access_token = $FBCommentsFree->GenerateAccessToken();
+        
+    // show template with tables
+    include("templates/fetch_all_tpl.php");
+
+}
+
+// ajax fetch posts
+add_action('wp_ajax_fbsync_comments_free_all_posts', 'fbsync_comments_free_all_posts_ajax');
+function fbsync_comments_free_all_posts_ajax() {
+    
+    $limit = filter_input(INPUT_POST, 'limit');
+    $api_page = filter_input(INPUT_POST, 'api_page');
+    $fb_page_id = filter_input(INPUT_POST, 'group_id');
+    $access_token = filter_input(INPUT_POST, 'access_token');
+
+    $FacebookData = new FBCommentsFree();
+    $get_page_data = $FacebookData->fetchGroupPostsUnlimited($api_page,$fb_page_id,$limit,$access_token);
+    if(is_array($get_page_data['data'])){
+        
+        echo json_encode(array("status"=>true,"data"=>$get_page_data['data'], "next_url"=>$get_page_data['next_url']));
+    } else {
+        echo json_encode(array("status"=>true, "next_url"=>false));
+    }
+
+    die();
+}
+
+// ajax fetch posts
+add_action('wp_ajax_fbsync_comments_free_all_posts_import', 'fbsync_comments_free_all_posts_import_ajax');
+function fbsync_comments_free_all_posts_import_ajax() {
+    
+    $post_id = filter_input(INPUT_POST, 'post_id');
+    $fbid = filter_input(INPUT_POST, 'fbid');
+    
+    if($fbid && $post_id){
+        $FacebookData = new FBComments();
+        // get access token from db
+        $access_token_fromdb = get_option('comments_importer_access_token');
+        // import comments from fb page, token not required here
+        $get_lists_of_comments_for_posts = $FacebookData->GetFBComments($fbid, $post_id,$access_token_fromdb);
+        //var_dump($get_lists_of_comments_for_posts);
+        $import_comments_now = $FacebookData->SaveCommentsToDatabase($get_lists_of_comments_for_posts, $post_id);
+
+        echo json_encode(array("status"=>true,"num"=>$import_comments_now));
+    } else {
+        echo json_encode(array("status"=>false,"msg"=>"Please enter correct POST ID"));
+    }
+
+    die();
+}
+
+
+
 /*
  * create database on plugin activation
  */
@@ -223,3 +295,6 @@ if (!function_exists('fb_comments_importer_pro_preprocess_comment')) {
     }
     add_filter( 'comments_array' , 'fb_comments_importer_preprocess_comment'); 
 }
+
+
+

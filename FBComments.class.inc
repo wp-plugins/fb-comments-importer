@@ -274,6 +274,22 @@ Class FBCommentsFree{
     }
     
     
+    /*
+     * Get posts from facebook group, without limit, just send next page url
+     */
+    public function fetchGroupPostsUnlimited($api_url,$fb_page_id,$limit,$token,$fields = 'id,message,created_time,picture,type,name,source,link'){
+    
+        // API URI
+        if($api_url=='null'){
+            $page_url = "https://graph.facebook.com/v2.3/".$fb_page_id."/feed?limit=50&$token&fields=$fields";
+        } else {
+            $page_url = $api_url;
+        }
+        $FBPage = $this->GetFbPageItems($page_url);
+        return $FBPage;
+        
+    }
+    
     
     /**
      * Get number of comments for specific item
