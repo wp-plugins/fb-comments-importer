@@ -281,7 +281,7 @@ Class FBCommentsFree{
     
         // API URI
         if($api_url=='null'){
-            $page_url = "https://graph.facebook.com/v2.3/".$fb_page_id."/feed?limit=50&$token&fields=$fields";
+            $page_url = "https://graph.facebook.com/v2.4/".$fb_page_id."/feed?limit=50&$token&fields=$fields";
         } else {
             $page_url = $api_url;
         }
@@ -425,7 +425,7 @@ Class FBCommentsFree{
     public function GetFBComments($id,$post_id){
         $id = trim($id);
         $token = $this->GenerateAccessToken();        
-        $file = $this->GetHTTPSData('https://graph.facebook.com/v2.3/'.$id.'/comments?'.$token.'&limit=10000&fields=id,from,message,created_time,attachment,comments.limit(10000){id,from,message,created_time,attachment}');
+        $file = $this->GetHTTPSData('https://graph.facebook.com/v2.4/'.$id.'/comments?'.$token.'&limit=10000&fields=id,from,message,created_time,attachment,comments.limit(10000){id,from,message,created_time,attachment}');
         $FBobject = json_decode($file);
         
         if($FBobject->data){

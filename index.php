@@ -3,7 +3,7 @@
 Plugin Name: Facebook Comments Importer
 Plugin URI: http://wp-resources.com/
 Description: Imports Facebook comments to your Wordpress site and gives it a SEO boost.
-Version: 1.9
+Version: 2.0
 Author: Ivan M
 */
 
@@ -74,7 +74,7 @@ function fbsync_comments_plugin_options_f() {
             echo "Settings are saved!";
             ?><meta http-equiv="REFRESH" content="2;url=?page=fbsync_comments_free"><?php
         }
-        // on uvezi click
+        // on import click
         else if($action == "import"){
             include("manual_import.php");
         }

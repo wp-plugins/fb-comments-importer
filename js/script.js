@@ -96,11 +96,8 @@ function FetchFacebookPostsFree(page){
                 jQuery("#table_with_posts_body").append('<tr><td>'+message+'</td><td>'+url+'</td><td>'+type+'</td><td>'+date+'</td><td>'+import_field+'</td></tr>');
                 i++;
             });
-            
-            console.log(response.next_url);
             FetchFacebookPostsFree(response.next_url);
         } else {
-            console.log("done");
             jQuery("#fetch_all_posts_button").removeAttr('disabled').attr('value', 'Fetch Now!');
         }
     });
