@@ -68,7 +68,7 @@ if(!function_exists('curl_version')){
                     </form>
                 </td>
                 <td valign="top">
-                    <a href="http://wp-resources.com/facebook-comments-importer/" target="_blank"><img src="<?php echo plugin_dir_url( __FILE__ );?>limited-offer-importer.png"></a>
+                    <a href="http://wp-resources.com/facebook-comments-importer/" target="_blank"><img src="<?php echo plugin_dir_url( __FILE__ );?>advert_3.png"></a>
                 </td>
             </tr>
         </table>
